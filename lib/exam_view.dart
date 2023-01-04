@@ -16,14 +16,14 @@ class _ExamState extends ExamModal {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Bioinformatika',
+        title: Text(
+          'Bioinformatika - ${allQuestions.length}',
         ),
         actions: [
           IconButton(
             onPressed: () {
               setState(() {
-                reset();
+                reset(context);
               });
             },
             icon: const Icon(
