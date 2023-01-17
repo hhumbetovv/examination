@@ -17,7 +17,7 @@ class _ExamState extends ExamModal {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Bioinformatika - ${allQuestions.length}',
+          'Şəbəkə Təhlükəsizliyi - ${allQuestions.length}',
         ),
         actions: [
           IconButton(
