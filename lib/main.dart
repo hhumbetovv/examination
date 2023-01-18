@@ -1,4 +1,4 @@
-import 'package:examination/exam_view.dart';
+import 'package:examination/select_subject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,11 +18,13 @@ class Examination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Examination',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: const Exam());
+      title: 'Examination',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        brightness: Brightness.dark,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: const SelectSubject(),
+    );
   }
 }
