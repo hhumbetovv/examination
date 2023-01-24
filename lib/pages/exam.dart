@@ -188,6 +188,7 @@ class _ExamState extends State<Exam> {
         shape: const CircularNotchedRectangle(),
         color: Theme.of(context).primaryColor,
         notchMargin: 8,
+        clipBehavior: Clip.hardEdge,
         child: Row(
           children: [
             Expanded(
@@ -237,24 +238,20 @@ class _ExamState extends State<Exam> {
       body: IgnorePointer(
         ignoring: isAnswered,
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
           child: Column(
             children: [
               question,
               answers,
-              Container(
-                padding: EdgeInsets.only(bottom: appBar.preferredSize.height - 10),
-                alignment: Alignment.topCenter,
-                child: InkWell(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Text(
-                      '${currentIndex + 1} / ${questions.length}',
-                      style: const TextStyle(
-                        fontSize: Constants.fontSizeSmall,
-                      ),
+              InkWell(
+                onTap: () {},
+                borderRadius: BorderRadius.circular(15.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Text(
+                    '${currentIndex + 1} / ${questions.length}',
+                    style: const TextStyle(
+                      fontSize: Constants.fontSizeSmall,
                     ),
                   ),
                 ),
@@ -263,7 +260,7 @@ class _ExamState extends State<Exam> {
           ),
         ),
       ),
-      bottomSheet: bottomAppBar,
+      bottomNavigationBar: bottomAppBar,
     );
   }
 }

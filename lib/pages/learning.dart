@@ -44,7 +44,6 @@ class _LearningState extends State<Learning> {
 
   void onSettingsButtonTap() async {
     var result = await selectSettingDialog(context);
-    debugPrint(result);
     if (result != null && result != 'cancel') {
       currentIndex = 0;
       if (result == 'all') {
