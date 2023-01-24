@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-Future<Map<String, int>?> selectRangeDialog(
-    BuildContext context, int rangeLength, Map<String, int> currentRange) async {
+Future<Map<String, int>?> selectRangeDialog(BuildContext context, int rangeLength) async {
   return showDialog<Map<String, int>>(
     context: context,
     builder: ((context) {
-      Map<String, int> newRange = currentRange;
+      Map<String, int> newRange = {"firstValue": 0, "secondValue": rangeLength - 1};
       bool onChanged = false;
 
       SizedBox dialogInput({required bool firstValue}) {

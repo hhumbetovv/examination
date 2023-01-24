@@ -1,4 +1,7 @@
-import 'package:examination/select_subject.dart';
+import 'package:examination/constants.dart';
+import 'package:examination/model/subjects.dart';
+import 'package:examination/pages/select_mode.dart';
+import 'package:examination/pages/select_subject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,14 +20,16 @@ class Examination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Subject> subjects = Subject.subjects;
+
     return MaterialApp(
       title: 'Examination',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
+        primaryColor: Constants.primaryColor,
+        brightness: MediaQueryData.fromWindow(WidgetsBinding.instance.window).platformBrightness,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SelectSubject(),
+      home: subjects.length == 1 ? SelectMode(subject: subjects[0]) : SelectSubject(subjects: subjects),
     );
   }
 }
