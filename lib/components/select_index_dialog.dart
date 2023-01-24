@@ -23,7 +23,6 @@ Future<int?> selectIndexDialog(BuildContext context, int index, int length) asyn
             border: InputBorder.none,
             hintText: '${index + 1}',
           ),
-          textAlignVertical: TextAlignVertical.center,
           textAlign: TextAlign.end,
           style: const TextStyle(fontSize: 30),
         );
