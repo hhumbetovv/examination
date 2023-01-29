@@ -1,10 +1,11 @@
-import 'package:examination/components/bordered_container.dart';
-import 'package:examination/components/custom_elevated_button.dart';
-import 'package:examination/constants.dart';
-import 'package:examination/model/subjects.dart';
-import 'package:examination/pages/exam.dart';
-import 'package:examination/pages/learning.dart';
 import 'package:flutter/material.dart';
+
+import '../components/bordered_container.dart';
+import '../components/custom_elevated_button.dart';
+import '../constants.dart';
+import '../model/subjects.dart';
+import 'exam_view.dart';
+import 'learning_view.dart';
 
 class SelectMode extends StatelessWidget {
   const SelectMode({
@@ -18,9 +19,9 @@ class SelectMode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Examination',
-          style: TextStyle(
+        title: Text(
+          subject.title,
+          style: const TextStyle(
             fontSize: Constants.fontSizeSmall,
           ),
         ),
@@ -38,7 +39,7 @@ class SelectMode extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Exam(subject: subject),
+                      builder: (context) => ExamView(subject: subject),
                     ),
                   ),
                   text: 'Exam',
@@ -47,7 +48,7 @@ class SelectMode extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Learning(subject: subject),
+                      builder: (context) => LearningView(subject: subject),
                     ),
                   ),
                   text: 'Learning',

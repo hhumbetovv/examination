@@ -11,7 +11,7 @@ class Constants {
   static BorderRadius radiusLarge = BorderRadius.circular(20);
   //! Color
   static const Color primaryColor = Color(0xFF533b7c);
-  static const Color answerColor = Color(0xFF7e6df3);
+  static const Color accentColor = Color(0xFF7e6df3);
   //! Other color codes
   // #ab3cfc
   // #7c589a

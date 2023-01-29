@@ -9,8 +9,9 @@ class Question {
     isAnswered = true;
   }
 
-  static List<Question> getAllQuestions(String blank) {
-    return createQuestionsList(blank)
+  //! All Questions
+  static List<Question> getAllQuestions(String bank) {
+    return createQuestionsList(bank)
         .map(
           (item) => Question(
             question: item[0],
@@ -26,9 +27,10 @@ class Question {
         .toList();
   }
 
-  static List<Question> getLongAnswerQuestions(String blank) {
+  //! Questions with Long Correct Answers
+  static List<Question> getLongAnswerQuestions(String bank) {
     List<Question> longAnswerQuestionList = [];
-    createQuestionsList(blank).forEach((item) {
+    createQuestionsList(bank).forEach((item) {
       String correctAnswer = item[1];
       bool checker(String element) => correctAnswer.length > element.length;
       if (checker(item[2]) && checker(item[3]) && checker(item[4]) && checker(item[5])) {
@@ -49,9 +51,10 @@ class Question {
     return longAnswerQuestionList;
   }
 
-  static List<Question> getShortAnswerQuestions(String blank) {
+  //! Questions with Short Correct Answers
+  static List<Question> getShortAnswerQuestions(String bank) {
     List<Question> shortAnswerQuestionList = [];
-    createQuestionsList(blank).forEach((item) {
+    createQuestionsList(bank).forEach((item) {
       String correctAnswer = item[1];
       bool checker(String element) => correctAnswer.length > element.length;
       if (!(checker(item[2]) && checker(item[3]) && checker(item[4]) && checker(item[5]))) {
@@ -85,8 +88,9 @@ class Answer {
   }
 }
 
-List<List<String>> createQuestionsList(String blank) {
-  List<String> questionList = blank.split('spacer');
+//! Create Questions List from Bank
+List<List<String>> createQuestionsList(String bank) {
+  List<String> questionList = bank.split('spacer');
   List<String> dublicatedList = [];
   List<List<String>> finalList = [];
   int questionLimit = 0;

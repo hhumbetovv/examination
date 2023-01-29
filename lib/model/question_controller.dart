@@ -1,9 +1,9 @@
-import 'package:examination/model/question.dart';
-import 'package:examination/model/settings.dart';
+import 'question.dart';
+import 'settings.dart';
 
 class QuestionController {
-  //! blank
-  final String blank;
+  //! Question bank
+  final String bank;
   //! Type Lists
   List<String> typeList = ['All Questions', 'With Long Answer', 'With Short Answer'];
   //! Question Lists
@@ -12,7 +12,7 @@ class QuestionController {
   late final List<Question> shortAnswerQuestions;
   late List<Question> questions;
   late List<Question> randomQuestions;
-  List<Question> incorrectAnsweredQuestions = [];
+  List<Question> incorrectQuestions = [];
   //! Settings
   late Settings currentSettings;
   late final Settings allQuestionSettings;
@@ -20,16 +20,16 @@ class QuestionController {
   late final Settings shortAnswerQuestionSettings;
   //! Current Questions
   late Question currentQuestion;
-  //! List Parameters
+  //! Page Values
   int currentIndex = 0;
   int corrects = 0;
   int wrongs = 0;
   int result = 0;
 
-  QuestionController({required this.blank});
+  QuestionController({required this.bank});
 
   void initialize({bool isLearning = false}) {
-    allQuestions = Question.getAllQuestions(blank);
+    allQuestions = Question.getAllQuestions(bank);
     allQuestionSettings = Settings(
       firstIndex: 0,
       lastIndex: allQuestions.length - 1,
@@ -37,7 +37,7 @@ class QuestionController {
       random: !isLearning,
       type: QuestionTypes.all,
     );
-    longAnswerQuestions = Question.getLongAnswerQuestions(blank);
+    longAnswerQuestions = Question.getLongAnswerQuestions(bank);
     longAnswerQuestionSettings = Settings(
       firstIndex: 0,
       lastIndex: longAnswerQuestions.length - 1,
@@ -45,7 +45,7 @@ class QuestionController {
       random: !isLearning,
       type: QuestionTypes.longs,
     );
-    shortAnswerQuestions = Question.getShortAnswerQuestions(blank);
+    shortAnswerQuestions = Question.getShortAnswerQuestions(bank);
     shortAnswerQuestionSettings = Settings(
       firstIndex: 0,
       lastIndex: shortAnswerQuestions.length - 1,
@@ -89,8 +89,10 @@ class QuestionController {
     wrongs = 0;
     result = 0;
     changeQuestions(currentSettings.type);
+    incorrectQuestions.clear();
   }
 
+  //! Index Functions
   void increaseIndex() {
     if (currentIndex < currentSettings.count - 1) {
       currentIndex++;
@@ -118,7 +120,7 @@ class QuestionController {
     result = ((corrects / (corrects + wrongs)) * 100).round();
   }
 
-  void setIncorrectAnsweredQuestion() {
-    incorrectAnsweredQuestions.add(getCurrentQuestion);
+  void setIncorrectQuestion() {
+    incorrectQuestions.add(getCurrentQuestion);
   }
 }

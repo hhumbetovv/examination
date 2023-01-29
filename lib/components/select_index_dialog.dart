@@ -1,12 +1,15 @@
-import 'package:examination/model/question_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../model/question_controller.dart';
 
 Future<bool?> selectIndexDialog(BuildContext context, QuestionController controller) async {
   return showDialog<bool>(
     context: context,
     builder: ((context) {
       int newIndex = controller.currentIndex;
+
+      //! Dialog Input
       TextField dialogInput() {
         return TextField(
           keyboardType: TextInputType.number,
@@ -26,6 +29,7 @@ Future<bool?> selectIndexDialog(BuildContext context, QuestionController control
         );
       }
 
+      //! Dialog Button
       SizedBox dialogButton({bool cancel = false}) {
         return SizedBox(
           width: MediaQuery.of(context).size.width / 3,
@@ -42,11 +46,15 @@ Future<bool?> selectIndexDialog(BuildContext context, QuestionController control
         );
       }
 
+      //! Dialog
       return AlertDialog(
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(flex: 5, child: dialogInput()),
+            Expanded(
+              flex: 5,
+              child: dialogInput(),
+            ),
             Expanded(
               flex: 6,
               child: Text(

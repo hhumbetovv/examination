@@ -1,9 +1,10 @@
-import 'package:examination/components/bordered_container.dart';
-import 'package:examination/components/custom_elevated_button.dart';
-import 'package:examination/constants.dart';
-import 'package:examination/model/subjects.dart';
-import 'package:examination/pages/select_mode.dart';
 import 'package:flutter/material.dart';
+
+import '../components/bordered_container.dart';
+import '../components/custom_elevated_button.dart';
+import '../constants.dart';
+import '../model/subjects.dart';
+import 'select_mode.dart';
 
 class SelectSubject extends StatelessWidget {
   const SelectSubject({

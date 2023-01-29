@@ -1,12 +1,15 @@
 enum QuestionTypes { all, longs, shorts }
 
 class Settings {
+  //! Indexes
   int firstIndex;
-  late int defaultFirstIndex;
   int lastIndex;
-  late int defaultLastIndex;
   int count;
+  //! Defaults
+  late int defaultLastIndex;
+  late int defaultFirstIndex;
   late int defaultCount;
+
   bool random;
   QuestionTypes type;
 
@@ -26,10 +29,6 @@ class Settings {
     type = value;
   }
 
-  void setRandom(bool value) {
-    random = value;
-  }
-
   bool checkIndexes(int firstIndex, int lastIndex) {
     if (firstIndex >= lastIndex) return true;
     return false;
@@ -44,5 +43,9 @@ class Settings {
       this.count =
           this.count > this.lastIndex - this.firstIndex + 1 ? this.lastIndex - this.firstIndex + 1 : this.count;
     }
+  }
+
+  void setRandom(bool value) {
+    random = value;
   }
 }

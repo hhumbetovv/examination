@@ -1,14 +1,14 @@
-import 'package:examination/components/answer_button.dart';
-import 'package:examination/components/select_index_dialog.dart';
-import 'package:examination/components/settings_dialog.dart';
-import 'package:examination/constants.dart';
-import 'package:examination/model/question_controller.dart';
-import 'package:examination/model/subjects.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
-class Learning extends StatefulWidget {
-  const Learning({
+import '../components/answer_button.dart';
+import '../components/select_index_dialog.dart';
+import '../constants.dart';
+import '../model/subjects.dart';
+import 'learning_modal.dart';
+
+class LearningView extends StatefulWidget {
+  const LearningView({
     Key? key,
     required this.subject,
   }) : super(key: key);
@@ -16,44 +16,10 @@ class Learning extends StatefulWidget {
   final Subject subject;
 
   @override
-  State<Learning> createState() => _LearningState();
+  State<LearningView> createState() => _LearningViewState();
 }
 
-class _LearningState extends State<Learning> {
-  late final QuestionController controller;
-  String? swipeDirection;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = QuestionController(blank: widget.subject.blank);
-    controller.initialize(isLearning: true);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void changeQuestion({bool increase = false}) {
-    setState(() {
-      if (increase) {
-        controller.increaseIndex();
-      } else {
-        controller.decreaseIndex();
-      }
-    });
-  }
-
-  void updateSettings(BuildContext context) async {
-    final result = await settingsDialog(context, controller);
-    if (result ?? false) {
-      setState(() {
-        controller.resetValues();
-      });
-    }
-  }
-
+class _LearningViewState extends LearningModal {
   //! AppBar
   AppBar get appBar {
     return AppBar(
@@ -106,7 +72,7 @@ class _LearningState extends State<Learning> {
   }
 
   //! Body
-  //? Questions
+  //? Question
   Align get question {
     return Align(
       alignment: Alignment.centerLeft,
@@ -155,8 +121,9 @@ class _LearningState extends State<Learning> {
   }
 
   //? Decrease Index Button
-  Center get decreaseIndex {
-    return Center(
+  Align get decreaseIndex {
+    return Align(
+      alignment: Alignment.centerRight,
       child: IconButton(
         onPressed: () => changeQuestion(),
         icon: const Icon(
@@ -191,8 +158,9 @@ class _LearningState extends State<Learning> {
   }
 
   //? Increase Index Button
-  Center get increaseIndex {
-    return Center(
+  Align get increaseIndex {
+    return Align(
+      alignment: Alignment.centerLeft,
       child: IconButton(
         onPressed: () => changeQuestion(increase: true),
         icon: const Icon(

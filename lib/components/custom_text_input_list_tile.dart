@@ -1,6 +1,7 @@
-import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../constants.dart';
 
 typedef IntCallback = void Function(int? data);
 
@@ -24,14 +25,13 @@ class CustomTextInputListTile extends StatefulWidget {
 
 class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
   late final FocusNode _localFocusNode;
-  late Color borderColor;
-  late Color primaryColor;
+  Color borderColor = Colors.grey;
+  Color primaryColor = Constants.accentColor;
 
   @override
   void initState() {
     super.initState();
     _localFocusNode = FocusNode();
-    changeColors();
   }
 
   @override
@@ -50,13 +50,8 @@ class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
 
   void changeColors() {
     setState(() {
-      if (widget.incorrect) {
-        borderColor = Colors.red;
-        primaryColor = Colors.red;
-      } else {
-        borderColor = Colors.grey;
-        primaryColor = Constants.answerColor;
-      }
+      borderColor = Colors.red;
+      primaryColor = Colors.red;
     });
   }
 
@@ -86,11 +81,7 @@ class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
                 ],
                 cursorColor: primaryColor,
                 onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    widget.onChanged(int.parse(value));
-                  } else {
-                    widget.onChanged(null);
-                  }
+                  widget.onChanged(int.parse(value));
                 },
                 decoration: InputDecoration(
                   hintText: widget.hintText,

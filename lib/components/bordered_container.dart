@@ -1,5 +1,6 @@
-import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
 
 class BorderedContainer extends StatelessWidget {
   const BorderedContainer({

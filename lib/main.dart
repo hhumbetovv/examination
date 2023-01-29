@@ -1,17 +1,11 @@
-import 'package:examination/constants.dart';
-import 'package:examination/model/subjects.dart';
-import 'package:examination/pages/select_mode.dart';
-import 'package:examination/pages/select_subject.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'constants.dart';
+import 'model/subjects.dart';
+import 'pages/select_mode.dart';
+import 'pages/select_subject.dart';
 
 void main() {
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
   runApp(const Examination());
 }
 

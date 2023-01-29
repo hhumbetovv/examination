@@ -1,10 +1,11 @@
 class Subject {
   final String title;
   final String tag;
-  final String blank;
+  final String bank;
 
-  Subject(this.title, this.tag, this.blank);
+  Subject(this.title, this.tag, this.bank);
 
+  //! Subjects and Their Banks
   static List<Subject> subjects = [
     Subject(
       'Bioinformatika',

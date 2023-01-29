@@ -1,7 +1,8 @@
-import 'package:examination/constants.dart';
-import 'package:examination/model/question_controller.dart';
-import 'package:examination/model/settings.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
+import '../model/question_controller.dart';
+import '../model/settings.dart';
 
 typedef TypeCallback = void Function(QuestionTypes type);
 
@@ -30,6 +31,12 @@ class _CustomRadioListTileState extends State<CustomRadioListTile> {
     selectedSettingsType = widget.controller.currentSettings.type;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  //! Selection
   InkWell selection(String selectionTitle, QuestionTypes selection) {
     return InkWell(
       onTap: () {
@@ -51,7 +58,7 @@ class _CustomRadioListTileState extends State<CustomRadioListTile> {
             Transform.scale(
               scale: 1.2,
               child: Radio<QuestionTypes>(
-                activeColor: Constants.answerColor,
+                activeColor: Constants.accentColor,
                 value: selection,
                 groupValue: selectedSettingsType,
                 onChanged: (QuestionTypes? value) {
@@ -68,6 +75,7 @@ class _CustomRadioListTileState extends State<CustomRadioListTile> {
     );
   }
 
+  //! Radio Buttons
   @override
   Widget build(BuildContext context) {
     return Column(

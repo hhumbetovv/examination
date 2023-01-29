@@ -1,5 +1,6 @@
-import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
 
 typedef BoolCallback = Function(bool? data);
 
@@ -29,6 +30,11 @@ class _CustomCheckboxListTileState extends State<CustomCheckboxListTile> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -50,7 +56,7 @@ class _CustomCheckboxListTileState extends State<CustomCheckboxListTile> {
             Transform.scale(
               scale: 1.2,
               child: Checkbox(
-                activeColor: Constants.answerColor,
+                activeColor: Constants.accentColor,
                 value: currentValue,
                 onChanged: (value) {
                   setState(() {

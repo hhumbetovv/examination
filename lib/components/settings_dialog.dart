@@ -1,11 +1,12 @@
-import 'package:examination/components/bordered_container.dart';
-import 'package:examination/components/custom_check_box_list_tile.dart';
-import 'package:examination/components/custom_radio_list_tile.dart';
-import 'package:examination/components/custom_text_input_list_tile.dart';
-import 'package:examination/constants.dart';
-import 'package:examination/model/question_controller.dart';
-import 'package:examination/model/settings.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
+import '../model/question_controller.dart';
+import '../model/settings.dart';
+import 'bordered_container.dart';
+import 'custom_check_box_list_tile.dart';
+import 'custom_radio_list_tile.dart';
+import 'custom_text_input_list_tile.dart';
 
 Future<bool?> settingsDialog(BuildContext context, QuestionController controller) async {
   return showDialog<bool>(
@@ -41,6 +42,12 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
     random = selectedSettings.random;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  //! Change Selected Setting's Type
   void changeSelectedSettings(QuestionTypes type) {
     setState(() {
       if (type == QuestionTypes.all) {
@@ -53,12 +60,7 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
     });
   }
 
-  void changeRandom(bool value) {
-    setState(() {
-      random = value;
-    });
-  }
-
+  //! Check Entered Indexes
   void checkIndexes() {
     setState(() {
       incorrect = selectedSettings.checkIndexes(
@@ -68,6 +70,12 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
     });
   }
 
+  //! Change Current Setting's Random
+  void changeRandom(bool value) {
+    random = value;
+  }
+
+  //! Save all values and reset
   void saveSettings() {
     if (!incorrect) {
       selectedSettings.setIndexSettings(
@@ -81,21 +89,17 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
     }
   }
 
+  //! Dialog Button
   SizedBox dialogButton({bool cancel = false}) {
-    void onPressed() {
-      if (cancel) {
-        Navigator.of(context).pop(false);
-      } else {
-        checkIndexes();
-        saveSettings();
-      }
-    }
-
     return SizedBox(
       width: MediaQuery.of(context).size.width / 3,
       height: 50,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: () {
+          if (cancel) Navigator.of(context).pop();
+          checkIndexes();
+          saveSettings();
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: cancel ? Colors.red : Colors.green,
           shape: RoundedRectangleBorder(
@@ -119,12 +123,14 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              //! Type Setting
               CustomRadioListTile(
                 controller: widget.controller,
                 group: 'type',
                 changeSelectedSettings: (type) => changeSelectedSettings(type),
               ),
               const Divider(),
+              //! Index Setting
               CustomTextInputListTile(
                 title: 'First index',
                 hintText: '${selectedSettings.firstIndex + 1}',
@@ -150,6 +156,7 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
                 incorrect: false,
               ),
               const Divider(),
+              //! Random Setting
               CustomCheckboxListTile(
                 title: 'Random',
                 passedValue: random,
@@ -168,6 +175,7 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
   }
 }
 
+//! Index Settings
 class IndexSetting {
   int? firstIndex;
   int? lastIndex;
