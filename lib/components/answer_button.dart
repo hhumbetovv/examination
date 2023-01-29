@@ -35,7 +35,7 @@ class _AnswerButtonState extends State<AnswerButton> {
       if (widget.updateQuestion != null) {
         widget.updateQuestion!(widget.currentAnswer.isCorrectAnswer);
       }
-      if (widget.currentAnswer.isCorrectAnswer) widget.controller.setIncorrectAnsweredQuestion();
+      if (widget.currentAnswer.isCorrectAnswer) widget.controller.setIncorrectQuestion();
     });
   }
 
