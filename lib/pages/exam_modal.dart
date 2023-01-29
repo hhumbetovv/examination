@@ -6,6 +6,7 @@ import 'exam_view.dart';
 
 abstract class ExamModal extends State<ExamView> {
   late final QuestionController controller;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -19,6 +20,17 @@ abstract class ExamModal extends State<ExamView> {
     super.dispose();
   }
 
+  void setIsLoading({bool value = false}) async {
+    if (value == false) {
+      await Future.delayed(const Duration(seconds: 1), () {
+        isLoading = value;
+      });
+    } else {
+      isLoading = value;
+    }
+    setState(() {});
+  }
+
   void resetQuestions() {
     setState(() {
       controller.resetValues();
@@ -27,7 +39,7 @@ abstract class ExamModal extends State<ExamView> {
 
   void updateSettings(BuildContext context) async {
     final result = await settingsDialog(context, controller);
-    if (result ?? false) {
+    if (result != null && result) {
       resetQuestions();
     }
   }
@@ -35,7 +47,7 @@ abstract class ExamModal extends State<ExamView> {
   void updateQuestion({bool isCorrect = false}) async {
     setState(() {
       controller.getCurrentQuestion.setIsAnswered();
-      controller.updateResults(isCorrect);
+      controller.resultController.updateResult(question: controller.getCurrentQuestion, isCorrect: isCorrect);
     });
   }
 

@@ -1,7 +1,9 @@
+import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../model/question_controller.dart';
+import 'bordered_container.dart';
 
 Future<bool?> selectIndexDialog(BuildContext context, QuestionController controller) async {
   return showDialog<bool>(
@@ -30,44 +32,59 @@ Future<bool?> selectIndexDialog(BuildContext context, QuestionController control
       }
 
       //! Dialog Button
-      SizedBox dialogButton({bool cancel = false}) {
-        return SizedBox(
-          width: MediaQuery.of(context).size.width / 3,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-              if (cancel) Navigator.of(context).pop();
+      ElevatedButton dialogButton({bool cancel = false, String? text}) {
+        return ElevatedButton(
+          onPressed: () {
+            if (cancel) {
+              Navigator.of(context).pop();
+            } else {
               controller.setIndex(newIndex);
               Navigator.of(context).pop(true);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: cancel ? Colors.red : Colors.green),
-            child: Text(cancel ? 'CANCEL' : 'OK'),
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(50),
+            backgroundColor: cancel ? Colors.red : Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: Constants.radiusMedium,
+            ),
           ),
+          child: Text(text ?? ''),
         );
       }
 
       //! Dialog
       return AlertDialog(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 5,
-              child: dialogInput(),
-            ),
-            Expanded(
-              flex: 6,
-              child: Text(
-                ' / ${controller.currentSettings.count}',
-                style: const TextStyle(fontSize: 30),
+        shape: RoundedRectangleBorder(borderRadius: Constants.radiusLarge),
+        contentPadding: const EdgeInsets.all(10),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        content: BorderedContainer(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 5,
+                child: dialogInput(),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 6,
+                child: Text(
+                  ' / ${controller.currentSettings.count}',
+                  style: const TextStyle(fontSize: 30),
+                ),
+              ),
+            ],
+          ),
         ),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
-          dialogButton(cancel: true),
-          dialogButton(),
+          Row(
+            children: [
+              Expanded(child: dialogButton(cancel: true, text: 'CANCEL')),
+              const SizedBox(width: 10),
+              Expanded(child: dialogButton(text: 'OK')),
+            ],
+          ),
         ],
       );
     }),

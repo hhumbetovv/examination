@@ -5,6 +5,12 @@ class Question {
 
   Question({required this.question, required this.answers});
 
+  int compareTo(other) {
+    return int.parse(question.substring(0, question.indexOf('.'))).compareTo(
+      int.parse(other.question.substring(0, other.question.indexOf('.'))),
+    );
+  }
+
   void setIsAnswered() {
     isAnswered = true;
   }

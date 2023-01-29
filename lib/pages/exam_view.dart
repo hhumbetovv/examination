@@ -1,3 +1,6 @@
+import 'package:examination/components/finish_dialog.dart';
+import 'package:examination/model/result_controller.dart';
+import 'package:examination/pages/result_view.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
@@ -77,11 +80,34 @@ class _ExamViewState extends ExamModal {
   FloatingActionButton get finishButton {
     return FloatingActionButton(
       backgroundColor: Theme.of(context).primaryColor,
-      onPressed: () {},
+      onPressed: () async {
+        ResultController currentController = controller.resultController.finalResults;
+        final result = controller.resultController.blanks != 0
+            ? await finishDialog(
+                context,
+                'There are ${controller.resultController.blanks} more questions you haven\'t answered, are you sure you want to continue?',
+              )
+            : true;
+        setIsLoading(value: true);
+        if ((result ?? false) && mounted) {
+          setState(() {
+            resetQuestions();
+          });
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ResultView(
+                controller: currentController,
+              ),
+            ),
+          );
+        }
+        setIsLoading(value: false);
+      },
       child: const Text(
-        '', // 'Bitir' ,
+        'Finish',
         style: TextStyle(
           fontSize: Constants.fontSizeSmall,
+          color: Colors.white,
         ),
       ),
     );
@@ -209,7 +235,7 @@ class _ExamViewState extends ExamModal {
           ),
           WidgetSpan(
             child: Text(
-              '${correct ? controller.corrects : controller.wrongs}',
+              '${correct ? controller.resultController.getCorrects : controller.resultController.getIncorrects}',
               style: const TextStyle(
                 fontSize: Constants.fontSizeMedium,
                 color: Colors.white,
@@ -224,7 +250,7 @@ class _ExamViewState extends ExamModal {
   //? Result Rate
   Text get resultRate {
     return Text(
-      '${controller.result}%',
+      '${controller.resultController.getCurrentResult}%',
       style: const TextStyle(
         fontSize: Constants.fontSizeMedium,
         color: Colors.white,
@@ -239,16 +265,21 @@ class _ExamViewState extends ExamModal {
       appBar: appBar,
       floatingActionButton: finishButton,
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-        child: Column(
-          children: [
-            question,
-            answers,
-            indexIndicator,
-          ],
-        ),
-      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Constants.accentColor,
+            ))
+          : Padding(
+              padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+              child: Column(
+                children: [
+                  question,
+                  answers,
+                  indexIndicator,
+                ],
+              ),
+            ),
       bottomNavigationBar: bottomAppBar,
     );
   }

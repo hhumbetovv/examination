@@ -1,3 +1,5 @@
+import 'package:examination/model/result_controller.dart';
+
 import 'question.dart';
 import 'settings.dart';
 
@@ -12,19 +14,16 @@ class QuestionController {
   late final List<Question> shortAnswerQuestions;
   late List<Question> questions;
   late List<Question> randomQuestions;
-  List<Question> incorrectQuestions = [];
   //! Settings
   late Settings currentSettings;
   late final Settings allQuestionSettings;
   late final Settings longAnswerQuestionSettings;
   late final Settings shortAnswerQuestionSettings;
-  //! Current Questions
+  //! Result Controller
+  late final ResultController resultController;
+  //! Current Values
   late Question currentQuestion;
-  //! Page Values
   int currentIndex = 0;
-  int corrects = 0;
-  int wrongs = 0;
-  int result = 0;
 
   QuestionController({required this.bank});
 
@@ -55,6 +54,7 @@ class QuestionController {
     );
     changeSettings(QuestionTypes.all);
     changeQuestions(QuestionTypes.all);
+    resultController = ResultController(count: currentSettings.count);
     currentQuestion = questions[currentIndex];
   }
 
@@ -85,11 +85,8 @@ class QuestionController {
 
   void resetValues() {
     currentIndex = 0;
-    corrects = 0;
-    wrongs = 0;
-    result = 0;
     changeQuestions(currentSettings.type);
-    incorrectQuestions.clear();
+    resultController.resetResult(count: currentSettings.count);
   }
 
   //! Index Functions
@@ -113,14 +110,5 @@ class QuestionController {
     } else {
       currentIndex = currentSettings.count - 1;
     }
-  }
-
-  void updateResults(bool isCorrect) {
-    isCorrect ? corrects++ : wrongs++;
-    result = ((corrects / (corrects + wrongs)) * 100).round();
-  }
-
-  void setIncorrectQuestion() {
-    incorrectQuestions.add(getCurrentQuestion);
   }
 }

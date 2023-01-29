@@ -15,7 +15,7 @@ class AnswerButton extends StatefulWidget {
     this.updateQuestion,
   }) : super(key: key);
 
-  final QuestionController controller;
+  final QuestionController? controller;
   final Answer currentAnswer;
   final bool isLearning;
 
@@ -30,12 +30,11 @@ class _AnswerButtonState extends State<AnswerButton> {
 
   void buttonOnTap() async {
     setState(() {
-      widget.controller.getCurrentQuestion.setIsAnswered();
+      widget.controller!.getCurrentQuestion.setIsAnswered();
       widget.currentAnswer.setIsAnswered();
       if (widget.updateQuestion != null) {
         widget.updateQuestion!(widget.currentAnswer.isCorrectAnswer);
       }
-      if (widget.currentAnswer.isCorrectAnswer) widget.controller.setIncorrectQuestion();
     });
   }
 
@@ -46,7 +45,8 @@ class _AnswerButtonState extends State<AnswerButton> {
 
   Color get getColor {
     if (widget.isLearning && widget.currentAnswer.isCorrectAnswer) return Colors.green;
-    if (!widget.controller.getCurrentQuestion.isAnswered) return Constants.accentColor;
+    if (widget.isLearning && widget.currentAnswer.isAnswered) return Colors.red;
+    if (!widget.isLearning && !widget.controller!.getCurrentQuestion.isAnswered) return Constants.accentColor;
     if (widget.currentAnswer.isCorrectAnswer) return Colors.green;
     if (widget.currentAnswer.isAnswered) return Colors.red;
     return Constants.accentColor;
@@ -74,7 +74,7 @@ class _AnswerButtonState extends State<AnswerButton> {
         borderRadius: Constants.radiusSmall,
         color: Colors.white.withOpacity(1.0),
         child: InkWell(
-          onTap: !widget.isLearning && !widget.controller.getCurrentQuestion.isAnswered ? buttonOnTap : null,
+          onTap: !widget.isLearning && !widget.controller!.getCurrentQuestion.isAnswered ? buttonOnTap : null,
           borderRadius: Constants.radiusSmall,
           child: Ink(
             decoration: BoxDecoration(
