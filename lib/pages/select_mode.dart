@@ -22,35 +22,39 @@ class SelectMode extends StatelessWidget {
           'Examination',
           style: TextStyle(
             fontSize: Constants.fontSizeSmall,
-            color: Colors.white,
           ),
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: BorderedContainer(
-        child: Wrap(
-          runSpacing: 10,
-          children: [
-            CustomElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Exam(subject: subject),
+      body: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Center(
+          child: BorderedContainer(
+            child: Wrap(
+              runSpacing: 10,
+              children: [
+                CustomElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Exam(subject: subject),
+                    ),
+                  ),
+                  text: 'Exam',
                 ),
-              ),
-              text: 'Exam',
-            ),
-            CustomElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Learning(subject: subject),
+                CustomElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Learning(subject: subject),
+                    ),
+                  ),
+                  text: 'Learning',
                 ),
-              ),
-              text: 'Learning',
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

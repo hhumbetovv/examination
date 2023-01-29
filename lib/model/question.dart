@@ -1,11 +1,16 @@
 class Question {
   final String question;
   final List<Answer> answers;
+  bool isAnswered = false;
 
   Question({required this.question, required this.answers});
 
-  static List<Question> questions(String blank) {
-    return questionBlank(blank)
+  void setIsAnswered() {
+    isAnswered = true;
+  }
+
+  static List<Question> getAllQuestions(String blank) {
+    return createQuestionsList(blank)
         .map(
           (item) => Question(
             question: item[0],
@@ -21,11 +26,11 @@ class Question {
         .toList();
   }
 
-  static List<Question> longAnswerQuestions(String blank) {
+  static List<Question> getLongAnswerQuestions(String blank) {
     List<Question> longAnswerQuestionList = [];
-    questionBlank(blank).forEach((item) {
-      String currentAnswer = item[1];
-      bool checker(String element) => currentAnswer.length > element.length;
+    createQuestionsList(blank).forEach((item) {
+      String correctAnswer = item[1];
+      bool checker(String element) => correctAnswer.length > element.length;
       if (checker(item[2]) && checker(item[3]) && checker(item[4]) && checker(item[5])) {
         longAnswerQuestionList.add(
           Question(
@@ -44,11 +49,11 @@ class Question {
     return longAnswerQuestionList;
   }
 
-  static List<Question> shortAnswerQuestions(String blank) {
+  static List<Question> getShortAnswerQuestions(String blank) {
     List<Question> shortAnswerQuestionList = [];
-    questionBlank(blank).forEach((item) {
-      String currentAnswer = item[1];
-      bool checker(String element) => currentAnswer.length > element.length;
+    createQuestionsList(blank).forEach((item) {
+      String correctAnswer = item[1];
+      bool checker(String element) => correctAnswer.length > element.length;
       if (!(checker(item[2]) && checker(item[3]) && checker(item[4]) && checker(item[5]))) {
         shortAnswerQuestionList.add(
           Question(
@@ -70,12 +75,17 @@ class Question {
 
 class Answer {
   final String answer;
-  final bool? isCorrectAnswer;
+  final bool isCorrectAnswer;
+  bool isAnswered = false;
 
   Answer({required this.answer, this.isCorrectAnswer = false});
+
+  void setIsAnswered() {
+    isAnswered = true;
+  }
 }
 
-List<List<String>> questionBlank(String blank) {
+List<List<String>> createQuestionsList(String blank) {
   List<String> questionList = blank.split('spacer');
   List<String> dublicatedList = [];
   List<List<String>> finalList = [];

@@ -21,28 +21,32 @@ class SelectSubject extends StatelessWidget {
           'Examination',
           style: TextStyle(
             fontSize: Constants.fontSizeSmall,
-            color: Colors.white,
           ),
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: BorderedContainer(
-        child: Wrap(
-          runSpacing: 10,
-          children: subjects.map((subject) {
-            return CustomElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectMode(
-                    subject: subject,
+      body: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Center(
+          child: BorderedContainer(
+            child: Wrap(
+              runSpacing: 10,
+              children: subjects.map((subject) {
+                return CustomElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectMode(
+                        subject: subject,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              text: subject.title,
-            );
-          }).toList(),
+                  text: subject.title,
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );

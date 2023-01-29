@@ -1,7 +1,8 @@
 import 'package:examination/components/answer_button.dart';
-import 'package:examination/components/select_range_dialog.dart';
+import 'package:examination/components/select_index_dialog.dart';
+import 'package:examination/components/settings_dialog.dart';
 import 'package:examination/constants.dart';
-import 'package:examination/model/question.dart';
+import 'package:examination/model/question_controller.dart';
 import 'package:examination/model/subjects.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
@@ -19,66 +20,55 @@ class Exam extends StatefulWidget {
 }
 
 class _ExamState extends State<Exam> {
-  List<Question> allQuestions = [];
-  List<Question> questions = [];
-  Map<String, int> questionRange = {
-    "firstValue": 0,
-    "secondValue": 0,
-  };
-  int currentIndex = 0;
-  int corrects = 0;
-  int wrongs = 0;
-  int result = 0;
-  Duration duration = const Duration(milliseconds: 1500);
-  bool isAnswered = false;
+  late final QuestionController controller;
 
   @override
   void initState() {
     super.initState();
-    allQuestions = Question.questions(widget.subject.blank);
-    questionRange["secondValue"] = allQuestions.length - 1;
-    questions = allQuestions.sublist(0)..shuffle();
+    controller = QuestionController(blank: widget.subject.blank);
+    controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void resetQuestions() {
-    questions = allQuestions.sublist(questionRange["firstValue"]!, questionRange["secondValue"]! + 1)..shuffle();
     setState(() {
-      currentIndex = 0;
-      corrects = 0;
-      wrongs = 0;
+      controller.resetValues();
     });
   }
 
-  void reset(BuildContext context) async {
-    final result = await selectRangeDialog(context, allQuestions.length);
-    if (result != null) {
-      questionRange = result;
+  void updateSettings(BuildContext context) async {
+    final result = await settingsDialog(context, controller);
+    if (result ?? false) {
       resetQuestions();
     }
   }
 
   void updateQuestion({bool isCorrect = false}) async {
     setState(() {
-      isAnswered = true;
-      isCorrect ? corrects++ : wrongs++;
-      result = ((corrects / (corrects + wrongs)) * 100).round();
+      controller.getCurrentQuestion.setIsAnswered();
+      controller.updateResults(isCorrect);
     });
-    await Future.delayed(duration, () {
-      isAnswered = false;
-      if (questions.length - 1 >= currentIndex + 1) {
-        currentIndex++;
-      } else {
-        resetQuestions();
-      }
-    });
-    setState(() {});
   }
 
-  IconButton get resetButton {
+  void changeQuestion({bool increase = false}) {
+    setState(() {
+      if (increase) {
+        controller.increaseIndex();
+      } else {
+        controller.decreaseIndex();
+      }
+    });
+  }
+
+  IconButton get settingsButton {
     return IconButton(
       onPressed: () {
         setState(() {
-          reset(context);
+          updateSettings(context);
         });
       },
       icon: const Icon(
@@ -103,7 +93,7 @@ class _ExamState extends State<Exam> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
-        questions[currentIndex].question,
+        controller.getCurrentQuestion.question,
         style: const TextStyle(
           fontSize: Constants.fontSizeLarge,
         ),
@@ -115,13 +105,11 @@ class _ExamState extends State<Exam> {
     return Expanded(
       child: ListView(
         physics: const BouncingScrollPhysics(),
-        children: questions[currentIndex].answers.map((item) {
+        children: controller.getCurrentQuestion.answers.map((answer) {
           return AnswerButton(
-            answer: item.answer,
-            isCorrectAnswer: item.isCorrectAnswer,
-            isAnswered: isAnswered,
+            currentAnswer: answer,
+            controller: controller,
             updateQuestion: (value) => updateQuestion(isCorrect: value),
-            duration: duration,
           );
         }).toList(),
       ),
@@ -140,9 +128,10 @@ class _ExamState extends State<Exam> {
           ),
           WidgetSpan(
             child: Text(
-              '${correct ? corrects : wrongs}',
+              '${correct ? controller.corrects : controller.wrongs}',
               style: const TextStyle(
                 fontSize: Constants.fontSizeMedium,
+                color: Colors.white,
               ),
             ),
           )
@@ -153,9 +142,10 @@ class _ExamState extends State<Exam> {
 
   Text get resultRate {
     return Text(
-      '$result%',
+      '${controller.result}%',
       style: const TextStyle(
         fontSize: Constants.fontSizeMedium,
+        color: Colors.white,
       ),
     );
   }
@@ -165,7 +155,6 @@ class _ExamState extends State<Exam> {
       widget.subject.title,
       style: const TextStyle(
         fontSize: Constants.fontSizeSmall,
-        color: Colors.white,
       ),
       overflow: TextOverflow.ellipsis,
     );
@@ -176,8 +165,12 @@ class _ExamState extends State<Exam> {
       title: appBarTitle,
       centerTitle: true,
       backgroundColor: Theme.of(context).primaryColor,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(15))),
-      actions: [messageMeButton, resetButton],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(15),
+        ),
+      ),
+      actions: [messageMeButton, settingsButton],
     );
   }
 
@@ -188,24 +181,11 @@ class _ExamState extends State<Exam> {
         shape: const CircularNotchedRectangle(),
         color: Theme.of(context).primaryColor,
         notchMargin: 8,
-        clipBehavior: Clip.hardEdge,
         child: Row(
           children: [
-            Expanded(
-              child: Center(
-                child: answerCount(),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: resultRate,
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: answerCount(correct: true),
-              ),
-            ),
+            Expanded(child: Center(child: answerCount())),
+            Expanded(child: Center(child: resultRate)),
+            Expanded(child: Center(child: answerCount(correct: true))),
             const Spacer(
               flex: 1,
             )
@@ -223,8 +203,62 @@ class _ExamState extends State<Exam> {
         '', // 'Bitir' ,
         style: TextStyle(
           fontSize: Constants.fontSizeSmall,
-          color: Colors.white,
         ),
+      ),
+    );
+  }
+
+  Align get increaseIndex {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        onPressed: () => changeQuestion(increase: true),
+        icon: const Icon(Icons.arrow_forward_ios),
+      ),
+    );
+  }
+
+  Center get changeIndex {
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          final result = await selectIndexDialog(context, controller);
+          if (result ?? false) setState(() {});
+        },
+        borderRadius: Constants.radiusMedium,
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Text(
+            '${controller.currentIndex + 1} / ${controller.currentSettings.count}',
+            style: const TextStyle(
+              fontSize: Constants.fontSizeSmall,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Align get decraseIndex {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: IconButton(
+        onPressed: () => changeQuestion(),
+        icon: const Icon(Icons.arrow_back_ios),
+      ),
+    );
+  }
+
+  Padding get indexIndicator {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(flex: 2, child: decraseIndex),
+          Expanded(flex: 3, child: changeIndex),
+          Expanded(flex: 2, child: increaseIndex),
+        ],
       ),
     );
   }
@@ -235,29 +269,14 @@ class _ExamState extends State<Exam> {
       appBar: appBar,
       floatingActionButton: finishButton,
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      body: IgnorePointer(
-        ignoring: isAnswered,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-          child: Column(
-            children: [
-              question,
-              answers,
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(15.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Text(
-                    '${currentIndex + 1} / ${questions.length}',
-                    style: const TextStyle(
-                      fontSize: Constants.fontSizeSmall,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+        child: Column(
+          children: [
+            question,
+            answers,
+            indexIndicator,
+          ],
         ),
       ),
       bottomNavigationBar: bottomAppBar,

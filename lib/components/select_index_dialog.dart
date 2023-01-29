@@ -1,27 +1,25 @@
+import 'package:examination/model/question_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-Future<int?> selectIndexDialog(BuildContext context, int index, int length) async {
-  return showDialog<int>(
+Future<bool?> selectIndexDialog(BuildContext context, QuestionController controller) async {
+  return showDialog<bool>(
     context: context,
     builder: ((context) {
-      int newIndex = index;
-      TextField dialogInput({required bool firstValue}) {
+      int newIndex = controller.currentIndex;
+      TextField dialogInput() {
         return TextField(
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
           ],
           onChanged: (value) {
-            if (value.isNotEmpty) {
-              newIndex = int.parse(value) - 1;
-            } else {
-              newIndex = index;
-            }
+            newIndex = controller.currentIndex;
+            if (value.isNotEmpty) newIndex = int.parse(value) - 1;
           },
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: '${index + 1}',
+            hintText: '${controller.currentIndex + 1}',
           ),
           textAlign: TextAlign.end,
           style: const TextStyle(fontSize: 30),
@@ -34,11 +32,9 @@ Future<int?> selectIndexDialog(BuildContext context, int index, int length) asyn
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              if (cancel) {
-                Navigator.of(context).pop();
-              } else {
-                Navigator.of(context).pop(newIndex);
-              }
+              if (cancel) Navigator.of(context).pop();
+              controller.setIndex(newIndex);
+              Navigator.of(context).pop(true);
             },
             style: ElevatedButton.styleFrom(backgroundColor: cancel ? Colors.red : Colors.green),
             child: Text(cancel ? 'CANCEL' : 'OK'),
@@ -50,11 +46,11 @@ Future<int?> selectIndexDialog(BuildContext context, int index, int length) asyn
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(flex: 100, child: dialogInput(firstValue: true)),
+            Expanded(flex: 5, child: dialogInput()),
             Expanded(
-              flex: 120,
+              flex: 6,
               child: Text(
-                ' / $length',
+                ' / ${controller.currentSettings.count}',
                 style: const TextStyle(fontSize: 30),
               ),
             ),
