@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
 
 typedef IntCallback = void Function(int? data);
 
@@ -26,12 +26,13 @@ class CustomTextInputListTile extends StatefulWidget {
 class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
   late final FocusNode _localFocusNode;
   Color borderColor = Colors.grey;
-  Color primaryColor = Constants.accentColor;
+  late Color primaryColor;
 
   @override
   void initState() {
     super.initState();
     _localFocusNode = FocusNode();
+    primaryColor = Constants.primaryColorDark;
   }
 
   @override

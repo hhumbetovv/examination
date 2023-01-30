@@ -1,6 +1,6 @@
+import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
 import 'model/subjects.dart';
 import 'pages/select_mode.dart';
 import 'pages/select_subject.dart';
@@ -19,7 +19,13 @@ class Examination extends StatelessWidget {
     return MaterialApp(
       title: 'Examination',
       theme: ThemeData(
-        primaryColor: Constants.primaryColor,
+        colorScheme: const ColorScheme.dark(
+          primary: Constants.primaryColorDark,
+          secondary: Constants.secondaryColorDark,
+          background: Constants.background,
+          onPrimary: Colors.black,
+          tertiary: Colors.white,
+        ),
         brightness: MediaQueryData.fromWindow(WidgetsBinding.instance.window).platformBrightness,
       ),
       debugShowCheckedModeBanner: false,

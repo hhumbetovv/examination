@@ -1,4 +1,6 @@
 import 'package:examination/components/answer_button.dart';
+import 'package:examination/components/core/appbar.dart';
+import 'package:examination/components/core/scaffold.dart';
 import 'package:examination/constants.dart';
 import 'package:examination/model/result_controller.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +28,8 @@ class _ResultViewState extends State<ResultView> {
     return Center(
       child: PieChart(
         centerText: '${widget.controller.getResult}%',
-        baseChartColor: Constants.primaryColor,
-        colorList: const [Colors.green, Colors.red, Constants.accentColor],
+        baseChartColor: Theme.of(context).colorScheme.secondary,
+        colorList: [Colors.green, Colors.red, Theme.of(context).colorScheme.primary],
         dataMap: {
           "Corrects - ${widget.controller.getCorrects}": widget.controller.getCorrects.toDouble(),
           "Incorrects - ${widget.controller.getIncorrects}": widget.controller.getIncorrects.toDouble(),
@@ -58,21 +60,9 @@ class _ResultViewState extends State<ResultView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Result',
-          style: TextStyle(
-            fontSize: Constants.fontSizeSmall,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-        ),
+    return ScaffoldCore(
+      appBar: AppBarCore(
+        titleText: 'Result',
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -88,8 +78,8 @@ class _ResultViewState extends State<ResultView> {
                   ...widget.controller.incorrects.map((object) {
                     return Column(
                       children: [
-                        const Divider(
-                          color: Constants.accentColor,
+                        Divider(
+                          color: Theme.of(context).colorScheme.secondary,
                           thickness: 1,
                         ),
                         Align(

@@ -12,12 +12,14 @@ class AnswerButton extends StatefulWidget {
     required this.currentAnswer,
     required this.controller,
     this.isLearning = false,
+    this.singleTap,
     this.updateQuestion,
   }) : super(key: key);
 
   final QuestionController? controller;
   final Answer currentAnswer;
   final bool isLearning;
+  final bool? singleTap;
 
   final BoolCallback? updateQuestion;
 
@@ -46,10 +48,12 @@ class _AnswerButtonState extends State<AnswerButton> {
   Color get getColor {
     if (widget.isLearning && widget.currentAnswer.isCorrectAnswer) return Colors.green;
     if (widget.isLearning && widget.currentAnswer.isAnswered) return Colors.red;
-    if (!widget.isLearning && !widget.controller!.getCurrentQuestion.isAnswered) return Constants.accentColor;
+    if (!widget.isLearning && !widget.controller!.getCurrentQuestion.isAnswered) {
+      return Theme.of(context).colorScheme.primary;
+    }
     if (widget.currentAnswer.isCorrectAnswer) return Colors.green;
     if (widget.currentAnswer.isAnswered) return Colors.red;
-    return Constants.accentColor;
+    return Theme.of(context).colorScheme.primary;
   }
 
   //! Answer Text
@@ -58,9 +62,9 @@ class _AnswerButtonState extends State<AnswerButton> {
       alignment: Alignment.centerLeft,
       child: Text(
         widget.currentAnswer.answer,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: Constants.fontSizeLarge,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.tertiary,
         ),
       ),
     );
@@ -72,9 +76,10 @@ class _AnswerButtonState extends State<AnswerButton> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Material(
         borderRadius: Constants.radiusSmall,
-        color: Colors.white.withOpacity(1.0),
         child: InkWell(
-          onTap: !widget.isLearning && !widget.controller!.getCurrentQuestion.isAnswered ? buttonOnTap : null,
+          onTap: (widget.singleTap ?? true) && !widget.isLearning && !widget.controller!.getCurrentQuestion.isAnswered
+              ? buttonOnTap
+              : null,
           borderRadius: Constants.radiusSmall,
           child: Ink(
             decoration: BoxDecoration(

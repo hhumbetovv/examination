@@ -2,8 +2,8 @@ import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../model/question_controller.dart';
-import 'bordered_container.dart';
+import '../../model/question_controller.dart';
+import '../core/bordered_container.dart';
 
 Future<bool?> selectIndexDialog(BuildContext context, QuestionController controller) async {
   return showDialog<bool>(
@@ -57,7 +57,7 @@ Future<bool?> selectIndexDialog(BuildContext context, QuestionController control
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: Constants.radiusLarge),
         contentPadding: const EdgeInsets.all(10),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         content: BorderedContainer(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

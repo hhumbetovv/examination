@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-import '../model/question_controller.dart';
-import '../model/settings.dart';
+import '../../constants.dart';
+import '../../model/question_controller.dart';
+import '../../model/settings.dart';
 
 typedef TypeCallback = void Function(QuestionTypes type);
 
@@ -58,7 +58,7 @@ class _CustomRadioListTileState extends State<CustomRadioListTile> {
             Transform.scale(
               scale: 1.2,
               child: Radio<QuestionTypes>(
-                activeColor: Constants.accentColor,
+                activeColor: Constants.primaryColorDark,
                 value: selection,
                 groupValue: selectedSettingsType,
                 onChanged: (QuestionTypes? value) {

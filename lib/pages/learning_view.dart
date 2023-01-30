@@ -1,8 +1,12 @@
+import 'package:examination/components/core/appbar.dart';
+import 'package:examination/components/core/bordered_container.dart';
+import 'package:examination/components/core/bottom_appbar.dart';
+import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
 import '../components/answer_button.dart';
-import '../components/select_index_dialog.dart';
+import '../components/dialogs/select_index_dialog.dart';
 import '../constants.dart';
 import '../model/subjects.dart';
 import 'learning_modal.dart';
@@ -20,32 +24,6 @@ class LearningView extends StatefulWidget {
 }
 
 class _LearningViewState extends LearningModal {
-  //! AppBar
-  AppBar get appBar {
-    return AppBar(
-      title: appBarTitle,
-      centerTitle: true,
-      backgroundColor: Theme.of(context).primaryColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(15),
-        ),
-      ),
-      actions: [messageMeButton, settingsButton],
-    );
-  }
-
-  //? Title
-  Text get appBarTitle {
-    return Text(
-      widget.subject.title,
-      style: const TextStyle(
-        fontSize: Constants.fontSizeSmall,
-      ),
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
   //? Message Me Button
   IconButton get messageMeButton {
     return IconButton(
@@ -65,16 +43,14 @@ class _LearningViewState extends LearningModal {
       onPressed: () {
         updateSettings(context);
       },
-      icon: const Icon(
-        Icons.settings,
-      ),
+      icon: const Icon(Icons.settings),
     );
   }
 
   //! Body
   //? Question
-  Align get question {
-    return Align(
+  BorderedContainer get question {
+    return BorderedContainer(
       alignment: Alignment.centerLeft,
       child: Text(
         controller.getCurrentQuestion.question,
@@ -102,20 +78,14 @@ class _LearningViewState extends LearningModal {
   }
 
   //! Bottom AppBar
-  SizedBox get bottomAppBar {
-    return SizedBox(
-      height: appBar.preferredSize.height,
-      child: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        color: Theme.of(context).primaryColor,
-        notchMargin: 8,
-        child: Row(
-          children: [
-            Expanded(child: decreaseIndex),
-            Expanded(child: changeIndex),
-            Expanded(child: increaseIndex),
-          ],
-        ),
+  BottomAppBarCore get bottomAppBar {
+    return BottomAppBarCore(
+      child: Row(
+        children: [
+          Expanded(child: decreaseIndex),
+          Expanded(child: changeIndex),
+          Expanded(child: increaseIndex),
+        ],
       ),
     );
   }
@@ -174,19 +144,26 @@ class _LearningViewState extends LearningModal {
   //! Scaffold
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar,
+    return ScaffoldCore(
+      appBar: AppBarCore(
+        titleText: widget.subject.title,
+        actions: [messageMeButton, settingsButton],
+      ),
       body: GestureDetector(
+        onTap: () {
+          swipeDirection = 'zero';
+        },
         onPanUpdate: (details) {
-          swipeDirection = details.delta.dx < 0 ? 'left' : 'right';
+          if (details.delta.dx < 0) swipeDirection = 'left';
+          if (details.delta.dx > 0) swipeDirection = 'right';
         },
         onPanEnd: (details) {
-          if (swipeDirection == null) return;
+          if (swipeDirection == 'zero') return;
           if (swipeDirection == 'left') changeQuestion(increase: true);
           if (swipeDirection == 'right') changeQuestion();
         },
         child: Padding(
-          padding: const EdgeInsets.all(15) + EdgeInsets.only(bottom: appBar.preferredSize.height - 10),
+          padding: const EdgeInsets.all(15) + const EdgeInsets.only(bottom: Constants.appBarHeight - 10),
           child: Column(
             children: [
               question,

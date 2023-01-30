@@ -1,4 +1,4 @@
-import 'package:examination/components/bordered_container.dart';
+import 'package:examination/components/core/bordered_container.dart';
 import 'package:examination/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +30,7 @@ Future<bool?> finishDialog(BuildContext context, String text) async {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: Constants.radiusLarge),
         contentPadding: const EdgeInsets.all(10),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         content: BorderedContainer(
           child: Text(
             text,

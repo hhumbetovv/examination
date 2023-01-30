@@ -1,11 +1,12 @@
-import 'package:examination/components/finish_dialog.dart';
-import 'package:examination/model/result_controller.dart';
-import 'package:examination/pages/result_view.dart';
+import 'package:examination/components/core/appbar.dart';
+import 'package:examination/components/core/bordered_container.dart';
+import 'package:examination/components/core/bottom_appbar.dart';
+import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
 import '../components/answer_button.dart';
-import '../components/select_index_dialog.dart';
+import '../components/dialogs/select_index_dialog.dart';
 import '../constants.dart';
 import '../model/subjects.dart';
 import 'exam_modal.dart';
@@ -23,32 +24,6 @@ class ExamView extends StatefulWidget {
 }
 
 class _ExamViewState extends ExamModal {
-  //! AppBar
-  AppBar get appBar {
-    return AppBar(
-      title: appBarTitle,
-      centerTitle: true,
-      backgroundColor: Theme.of(context).primaryColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(15),
-        ),
-      ),
-      actions: [messageMeButton, settingsButton],
-    );
-  }
-
-  //? Title
-  Text get appBarTitle {
-    return Text(
-      widget.subject.title,
-      style: const TextStyle(
-        fontSize: Constants.fontSizeSmall,
-      ),
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
   //? Message Me Button
   IconButton get messageMeButton {
     return IconButton(
@@ -70,44 +45,20 @@ class _ExamViewState extends ExamModal {
           updateSettings(context);
         });
       },
-      icon: const Icon(
-        Icons.settings,
-      ),
+      icon: const Icon(Icons.settings),
     );
   }
 
   //! Finish Button
   FloatingActionButton get finishButton {
     return FloatingActionButton(
-      backgroundColor: Theme.of(context).primaryColor,
-      onPressed: () async {
-        ResultController currentController = controller.resultController.finalResults;
-        final result = controller.resultController.blanks != 0
-            ? await finishDialog(
-                context,
-                'There are ${controller.resultController.blanks} more questions you haven\'t answered, are you sure you want to continue?',
-              )
-            : true;
-        setIsLoading(value: true);
-        if ((result ?? false) && mounted) {
-          setState(() {
-            resetQuestions();
-          });
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ResultView(
-                controller: currentController,
-              ),
-            ),
-          );
-        }
-        setIsLoading(value: false);
-      },
-      child: const Text(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      onPressed: onFinishButtonPressed,
+      child: Text(
         'Finish',
         style: TextStyle(
           fontSize: Constants.fontSizeSmall,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.tertiary,
         ),
       ),
     );
@@ -115,8 +66,8 @@ class _ExamViewState extends ExamModal {
 
   //! Body
   //? Question
-  Align get question {
-    return Align(
+  BorderedContainer get question {
+    return BorderedContainer(
       alignment: Alignment.centerLeft,
       child: Text(
         controller.getCurrentQuestion.question,
@@ -130,15 +81,32 @@ class _ExamViewState extends ExamModal {
   //? Answers
   Expanded get answers {
     return Expanded(
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: controller.getCurrentQuestion.answers.map((answer) {
-          return AnswerButton(
-            currentAnswer: answer,
-            controller: controller,
-            updateQuestion: (value) => updateQuestion(isCorrect: value),
-          );
-        }).toList(),
+      child: Listener(
+        onPointerDown: (event) {
+          events.add(event);
+          setState(() {
+            if (events.length > 1) {
+              singleTap = false;
+            }
+          });
+        },
+        onPointerUp: (event) {
+          events.clear();
+          setState(() {
+            singleTap = true;
+          });
+        },
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          children: controller.getCurrentQuestion.answers.map((answer) {
+            return AnswerButton(
+              currentAnswer: answer,
+              controller: controller,
+              singleTap: singleTap,
+              updateQuestion: (value) => updateQuestion(isCorrect: value),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -203,21 +171,15 @@ class _ExamViewState extends ExamModal {
   }
 
   //! Bottom AppBar
-  SizedBox get bottomAppBar {
-    return SizedBox(
-      height: appBar.preferredSize.height,
-      child: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        color: Theme.of(context).primaryColor,
-        notchMargin: 8,
-        child: Row(
-          children: [
-            Expanded(child: Center(child: answerCount())),
-            Expanded(child: Center(child: resultRate)),
-            Expanded(child: Center(child: answerCount(correct: true))),
-            const Spacer(flex: 1),
-          ],
-        ),
+  BottomAppBarCore get bottomAppBar {
+    return BottomAppBarCore(
+      child: Row(
+        children: [
+          Expanded(child: Center(child: answerCount())),
+          Expanded(child: Center(child: resultRate)),
+          Expanded(child: Center(child: answerCount(correct: true))),
+          const Spacer(flex: 1),
+        ],
       ),
     );
   }
@@ -261,14 +223,16 @@ class _ExamViewState extends ExamModal {
   //! Scaffold
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar,
+    return ScaffoldCore(
+      appBar: AppBarCore(
+        titleText: widget.subject.title,
+        actions: [messageMeButton, settingsButton],
+      ),
       floatingActionButton: finishButton,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       body: isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-              color: Constants.accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ))
           : Padding(
               padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),

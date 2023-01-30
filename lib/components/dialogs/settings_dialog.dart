@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-import '../model/question_controller.dart';
-import '../model/settings.dart';
-import 'bordered_container.dart';
-import 'custom_check_box_list_tile.dart';
-import 'custom_radio_list_tile.dart';
-import 'custom_text_input_list_tile.dart';
+import '../../constants.dart';
+import '../../model/question_controller.dart';
+import '../../model/settings.dart';
+import '../core/bordered_container.dart';
+import '../customs/custom_check_box_list_tile.dart';
+import '../customs/custom_radio_list_tile.dart';
+import '../customs/custom_text_input_list_tile.dart';
 
 Future<bool?> settingsDialog(BuildContext context, QuestionController controller) async {
   return showDialog<bool>(
@@ -116,7 +116,7 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: Constants.radiusLarge),
       contentPadding: const EdgeInsets.all(10),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Constants.background,
       content: BorderedContainer(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

@@ -1,12 +1,17 @@
+import 'package:examination/components/dialogs/finish_dialog.dart';
+import 'package:examination/model/result_controller.dart';
+import 'package:examination/pages/result_view.dart';
 import 'package:flutter/material.dart';
 
-import '../components/settings_dialog.dart';
+import '../components/dialogs/settings_dialog.dart';
 import '../model/question_controller.dart';
 import 'exam_view.dart';
 
 abstract class ExamModal extends State<ExamView> {
   late final QuestionController controller;
   bool isLoading = false;
+  final events = [];
+  bool singleTap = true;
 
   @override
   void initState() {
@@ -59,5 +64,29 @@ abstract class ExamModal extends State<ExamView> {
         controller.decreaseIndex();
       }
     });
+  }
+
+  void onFinishButtonPressed() async {
+    ResultController currentController = controller.resultController.finalResults;
+    final result = controller.resultController.blanks != 0
+        ? await finishDialog(
+            context,
+            'There are ${controller.resultController.blanks} more questions you haven\'t answered, are you sure you want to continue?',
+          )
+        : true;
+    if ((result ?? false) && mounted) {
+      setIsLoading(value: true);
+      setState(() {
+        resetQuestions();
+      });
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ResultView(
+            controller: currentController,
+          ),
+        ),
+      );
+    }
+    setIsLoading(value: false);
   }
 }

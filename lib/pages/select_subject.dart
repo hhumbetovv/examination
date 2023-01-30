@@ -1,8 +1,9 @@
+import 'package:examination/components/core/appbar.dart';
+import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 
-import '../components/bordered_container.dart';
-import '../components/custom_elevated_button.dart';
-import '../constants.dart';
+import '../components/core/bordered_container.dart';
+import '../components/customs/custom_elevated_button.dart';
 import '../model/subjects.dart';
 import 'select_mode.dart';
 
@@ -16,17 +17,8 @@ class SelectSubject extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Examination',
-          style: TextStyle(
-            fontSize: Constants.fontSizeSmall,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
+    return ScaffoldCore(
+      appBar: AppBarCore(titleText: 'Examination'),
       body: Padding(
         padding: const EdgeInsets.all(30),
         child: Center(
