@@ -51,12 +51,13 @@ class _CustomCheckboxListTileState extends State<CustomCheckboxListTile> {
           children: [
             Text(
               widget.title,
-              style: const TextStyle(fontSize: Constants.fontSizeMedium),
+              style: const TextStyle(
+                fontSize: Constants.fontSizeMedium,
+              ),
             ),
             Transform.scale(
               scale: 1.2,
               child: Checkbox(
-                activeColor: Constants.primaryColorDark,
                 value: currentValue,
                 onChanged: (value) {
                   setState(() {

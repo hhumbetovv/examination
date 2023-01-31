@@ -37,3 +37,37 @@ class Constants {
 
   //? Gradient Background - #101529 => #141A33
 }
+
+class ColorTheme {
+  final ColorCore dark;
+  final ColorCore light;
+
+  ColorTheme({required this.dark, required this.light});
+
+  static List<ColorTheme> colors = [
+    ColorTheme(
+      dark: ColorCore(
+        primary: const Color(0xFF533b7c),
+        secondary: const Color(0xFF7e6df3),
+        background: const Color(0xFF12131C),
+      ),
+      light: ColorCore(
+        primary: const Color(0xFF7e6df3),
+        secondary: const Color(0xFF533b7c),
+        background: const Color(0xFFe5e8ff),
+      ),
+    ),
+  ];
+}
+
+class ColorCore {
+  final Color primary;
+  final Color secondary;
+  final Color background;
+
+  ColorCore({
+    required this.primary,
+    required this.secondary,
+    required this.background,
+  });
+}

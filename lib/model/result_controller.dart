@@ -1,4 +1,4 @@
-import 'package:examination/model/question.dart';
+import 'question.dart';
 
 class ResultController {
   int blanks = 0;

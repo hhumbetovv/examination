@@ -25,21 +25,21 @@ class CustomTextInputListTile extends StatefulWidget {
 
 class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
   late final FocusNode _localFocusNode;
-  Color borderColor = Colors.grey;
-  late Color primaryColor;
+  String? error;
 
   @override
   void initState() {
     super.initState();
     _localFocusNode = FocusNode();
-    primaryColor = Constants.primaryColorDark;
   }
 
   @override
   void didUpdateWidget(covariant CustomTextInputListTile oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.incorrect != widget.incorrect) {
-      changeColors();
+      setState(() {
+        error = '';
+      });
     }
   }
 
@@ -47,13 +47,6 @@ class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
   void dispose() {
     super.dispose();
     _localFocusNode.dispose();
-  }
-
-  void changeColors() {
-    setState(() {
-      borderColor = Colors.red;
-      primaryColor = Colors.red;
-    });
   }
 
   @override
@@ -70,7 +63,9 @@ class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
           children: [
             Text(
               widget.title,
-              style: const TextStyle(fontSize: Constants.fontSizeMedium),
+              style: const TextStyle(
+                fontSize: Constants.fontSizeMedium,
+              ),
             ),
             SizedBox(
               width: 50,
@@ -80,28 +75,18 @@ class _CustomTextInputListTileState extends State<CustomTextInputListTile> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 ],
-                cursorColor: primaryColor,
                 onChanged: (value) {
                   widget.onChanged(int.parse(value));
                 },
                 decoration: InputDecoration(
                   hintText: widget.hintText,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 2,
-                      color: primaryColor,
-                    ),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 1,
-                      color: borderColor,
-                    ),
-                  ),
+                  errorText: error,
                 ),
                 textAlign: TextAlign.center,
                 textAlignVertical: TextAlignVertical.center,
-                style: const TextStyle(fontSize: Constants.fontSizeMedium),
+                style: const TextStyle(
+                  fontSize: Constants.fontSizeMedium,
+                ),
               ),
             ),
           ],

@@ -53,12 +53,13 @@ class _CustomRadioListTileState extends State<CustomRadioListTile> {
           children: [
             Text(
               selectionTitle,
-              style: const TextStyle(fontSize: Constants.fontSizeMedium),
+              style: const TextStyle(
+                fontSize: Constants.fontSizeMedium,
+              ),
             ),
             Transform.scale(
               scale: 1.2,
               child: Radio<QuestionTypes>(
-                activeColor: Constants.primaryColorDark,
                 value: selection,
                 groupValue: selectedSettingsType,
                 onChanged: (QuestionTypes? value) {

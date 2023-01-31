@@ -1,10 +1,7 @@
-import 'package:examination/components/core/appbar.dart';
-import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 
-import '../components/core/bordered_container.dart';
-import '../components/customs/custom_elevated_button.dart';
 import '../model/subjects.dart';
+import '../widgets/bordered_container.dart';
 import 'exam_view.dart';
 import 'learning_view.dart';
 
@@ -18,8 +15,8 @@ class SelectMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCore(
-      appBar: AppBarCore(titleText: subject.title),
+    return Scaffold(
+      appBar: AppBar(title: Text(subject.title)),
       body: Padding(
         padding: const EdgeInsets.all(30),
         child: Center(
@@ -27,23 +24,23 @@ class SelectMode extends StatelessWidget {
             child: Wrap(
               runSpacing: 10,
               children: [
-                CustomElevatedButton(
+                ElevatedButton(
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ExamView(subject: subject),
                     ),
                   ),
-                  text: 'Exam',
+                  child: const Text('Exam'),
                 ),
-                CustomElevatedButton(
+                ElevatedButton(
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => LearningView(subject: subject),
                     ),
                   ),
-                  text: 'Learning',
+                  child: const Text('Learning'),
                 ),
               ],
             ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
 import '../../model/question_controller.dart';
 import '../../model/settings.dart';
-import '../core/bordered_container.dart';
+import '../bordered_container.dart';
 import '../customs/custom_check_box_list_tile.dart';
 import '../customs/custom_radio_list_tile.dart';
 import '../customs/custom_text_input_list_tile.dart';
+import '../dialog_button.dart';
 
 Future<bool?> settingsDialog(BuildContext context, QuestionController controller) async {
   return showDialog<bool>(
@@ -89,34 +89,11 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
     }
   }
 
-  //! Dialog Button
-  ElevatedButton dialogButton({bool cancel = false, String? text}) {
-    return ElevatedButton(
-      onPressed: () {
-        if (cancel) {
-          Navigator.of(context).pop(false);
-        } else {
-          checkIndexes();
-          saveSettings();
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size.fromHeight(50),
-        backgroundColor: cancel ? Colors.red : Colors.green,
-        shape: RoundedRectangleBorder(
-          borderRadius: Constants.radiusMedium,
-        ),
-      ),
-      child: Text(text ?? ''),
-    );
-  }
-
+  //! Dialog
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: Constants.radiusLarge),
       contentPadding: const EdgeInsets.all(10),
-      backgroundColor: Constants.background,
       content: BorderedContainer(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -170,9 +147,17 @@ class _CustomAlertDialogState extends State<_CustomAlertDialog> {
       actions: [
         Row(
           children: [
-            Expanded(child: dialogButton(cancel: true, text: 'CANCEL')),
+            const Expanded(child: DialogButton()),
             const SizedBox(width: 10),
-            Expanded(child: dialogButton(text: 'RESET')),
+            Expanded(
+              child: DialogButton(
+                onPressed: () {
+                  checkIndexes();
+                  saveSettings();
+                },
+                text: 'Reset',
+              ),
+            ),
           ],
         ),
       ],

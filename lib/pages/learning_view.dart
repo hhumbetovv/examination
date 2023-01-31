@@ -1,14 +1,11 @@
-import 'package:examination/components/core/appbar.dart';
-import 'package:examination/components/core/bordered_container.dart';
-import 'package:examination/components/core/bottom_appbar.dart';
-import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
-import '../components/answer_button.dart';
-import '../components/dialogs/select_index_dialog.dart';
 import '../constants.dart';
 import '../model/subjects.dart';
+import '../widgets/answer_button.dart';
+import '../widgets/bordered_container.dart';
+import '../widgets/dialogs/select_index_dialog.dart';
 import 'learning_modal.dart';
 
 class LearningView extends StatefulWidget {
@@ -78,14 +75,18 @@ class _LearningViewState extends LearningModal {
   }
 
   //! Bottom AppBar
-  BottomAppBarCore get bottomAppBar {
-    return BottomAppBarCore(
-      child: Row(
-        children: [
-          Expanded(child: decreaseIndex),
-          Expanded(child: changeIndex),
-          Expanded(child: increaseIndex),
-        ],
+  SizedBox get bottomAppBar {
+    return SizedBox(
+      height: Constants.appBarHeight,
+      child: BottomAppBar(
+        notchMargin: 8,
+        child: Row(
+          children: [
+            Expanded(child: decreaseIndex),
+            Expanded(child: changeIndex),
+            Expanded(child: increaseIndex),
+          ],
+        ),
       ),
     );
   }
@@ -96,10 +97,7 @@ class _LearningViewState extends LearningModal {
       alignment: Alignment.centerRight,
       child: IconButton(
         onPressed: () => changeQuestion(),
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Colors.white,
-        ),
+        icon: const Icon(Icons.arrow_back_ios),
       ),
     );
   }
@@ -115,13 +113,7 @@ class _LearningViewState extends LearningModal {
         borderRadius: Constants.radiusMedium,
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: Text(
-            '${controller.currentIndex + 1} / ${controller.currentSettings.count}',
-            style: const TextStyle(
-              fontSize: Constants.fontSizeSmall,
-              color: Colors.white,
-            ),
-          ),
+          child: Text('${controller.currentIndex + 1} / ${controller.currentSettings.count}'),
         ),
       ),
     );
@@ -133,10 +125,7 @@ class _LearningViewState extends LearningModal {
       alignment: Alignment.centerLeft,
       child: IconButton(
         onPressed: () => changeQuestion(increase: true),
-        icon: const Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.white,
-        ),
+        icon: const Icon(Icons.arrow_forward_ios),
       ),
     );
   }
@@ -144,9 +133,9 @@ class _LearningViewState extends LearningModal {
   //! Scaffold
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCore(
-      appBar: AppBarCore(
-        titleText: widget.subject.title,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.subject.title),
         actions: [messageMeButton, settingsButton],
       ),
       body: GestureDetector(

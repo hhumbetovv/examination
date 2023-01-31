@@ -1,14 +1,11 @@
-import 'package:examination/components/core/appbar.dart';
-import 'package:examination/components/core/bordered_container.dart';
-import 'package:examination/components/core/bottom_appbar.dart';
-import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
-import '../components/answer_button.dart';
-import '../components/dialogs/select_index_dialog.dart';
 import '../constants.dart';
 import '../model/subjects.dart';
+import '../widgets/answer_button.dart';
+import '../widgets/bordered_container.dart';
+import '../widgets/dialogs/select_index_dialog.dart';
 import 'exam_modal.dart';
 
 class ExamView extends StatefulWidget {
@@ -25,7 +22,7 @@ class ExamView extends StatefulWidget {
 
 class _ExamViewState extends ExamModal {
   //? Message Me Button
-  IconButton get messageMeButton {
+  IconButton get waMessageButton {
     return IconButton(
       onPressed: () async {
         await WhatsappShare.share(
@@ -52,15 +49,8 @@ class _ExamViewState extends ExamModal {
   //! Finish Button
   FloatingActionButton get finishButton {
     return FloatingActionButton(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
       onPressed: onFinishButtonPressed,
-      child: Text(
-        'Finish',
-        style: TextStyle(
-          fontSize: Constants.fontSizeSmall,
-          color: Theme.of(context).colorScheme.tertiary,
-        ),
-      ),
+      child: const Text('Finish'),
     );
   }
 
@@ -148,12 +138,7 @@ class _ExamViewState extends ExamModal {
         borderRadius: Constants.radiusMedium,
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: Text(
-            '${controller.currentIndex + 1} / ${controller.currentSettings.count}',
-            style: const TextStyle(
-              fontSize: Constants.fontSizeSmall,
-            ),
-          ),
+          child: Text('${controller.currentIndex + 1} / ${controller.currentSettings.count}'),
         ),
       ),
     );
@@ -171,15 +156,19 @@ class _ExamViewState extends ExamModal {
   }
 
   //! Bottom AppBar
-  BottomAppBarCore get bottomAppBar {
-    return BottomAppBarCore(
-      child: Row(
-        children: [
-          Expanded(child: Center(child: answerCount())),
-          Expanded(child: Center(child: resultRate)),
-          Expanded(child: Center(child: answerCount(correct: true))),
-          const Spacer(flex: 1),
-        ],
+  SizedBox get bottomAppBar {
+    return SizedBox(
+      height: Constants.appBarHeight,
+      child: BottomAppBar(
+        notchMargin: 8,
+        child: Row(
+          children: [
+            Expanded(child: Center(child: answerCount())),
+            Expanded(child: Center(child: resultRate)),
+            Expanded(child: Center(child: answerCount(correct: true))),
+            const Spacer(flex: 1),
+          ],
+        ),
       ),
     );
   }
@@ -200,7 +189,6 @@ class _ExamViewState extends ExamModal {
               '${correct ? controller.resultController.getCorrects : controller.resultController.getIncorrects}',
               style: const TextStyle(
                 fontSize: Constants.fontSizeMedium,
-                color: Colors.white,
               ),
             ),
           )
@@ -215,30 +203,29 @@ class _ExamViewState extends ExamModal {
       '${controller.resultController.getCurrentResult}%',
       style: const TextStyle(
         fontSize: Constants.fontSizeMedium,
-        color: Colors.white,
       ),
+      textAlign: TextAlign.center,
     );
   }
 
   //! Scaffold
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCore(
-      appBar: AppBarCore(
-        titleText: widget.subject.title,
-        actions: [messageMeButton, settingsButton],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.subject.title),
+        actions: [waMessageButton, settingsButton],
       ),
       floatingActionButton: finishButton,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.secondary,
-            ))
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
               child: Column(
                 children: [
                   question,
+                  const SizedBox(height: 10),
                   answers,
                   indexIndicator,
                 ],

@@ -62,9 +62,8 @@ class _AnswerButtonState extends State<AnswerButton> {
       alignment: Alignment.centerLeft,
       child: Text(
         widget.currentAnswer.answer,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: Constants.fontSizeLarge,
-          color: Theme.of(context).colorScheme.tertiary,
         ),
       ),
     );

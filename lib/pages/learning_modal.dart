@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../components/dialogs/settings_dialog.dart';
 import '../model/question_controller.dart';
+import '../widgets/dialogs/settings_dialog.dart';
 import 'learning_view.dart';
 
 abstract class LearningModal extends State<LearningView> {

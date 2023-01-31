@@ -1,10 +1,9 @@
-import 'package:examination/components/answer_button.dart';
-import 'package:examination/components/core/appbar.dart';
-import 'package:examination/components/core/scaffold.dart';
-import 'package:examination/constants.dart';
-import 'package:examination/model/result_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+
+import '../constants.dart';
+import '../model/result_controller.dart';
+import '../widgets/answer_button.dart';
 
 class ResultView extends StatefulWidget {
   const ResultView({
@@ -27,7 +26,7 @@ class _ResultViewState extends State<ResultView> {
   Center chart({bool isCenter = false}) {
     return Center(
       child: PieChart(
-        centerText: '${widget.controller.getResult}%',
+        centerText: isCenter ? null : '${widget.controller.getResult}%',
         baseChartColor: Theme.of(context).colorScheme.secondary,
         colorList: [Colors.green, Colors.red, Theme.of(context).colorScheme.primary],
         dataMap: {
@@ -42,9 +41,9 @@ class _ResultViewState extends State<ResultView> {
             fontSize: isCenter ? Constants.fontSizeLarge : Constants.fontSizeSmall,
           ),
         ),
-        chartLegendSpacing: 40,
-        chartType: isCenter ? ChartType.disc : ChartType.ring,
+        chartLegendSpacing: 30,
         chartValuesOptions: ChartValuesOptions(
+          showChartValues: isCenter,
           showChartValuesOutside: isCenter,
           decimalPlaces: 0,
           showChartValuesInPercentage: true,
@@ -60,10 +59,8 @@ class _ResultViewState extends State<ResultView> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCore(
-      appBar: AppBarCore(
-        titleText: 'Result',
-      ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Result')),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: widget.controller.getIncorrects == 0
@@ -78,10 +75,7 @@ class _ResultViewState extends State<ResultView> {
                   ...widget.controller.incorrects.map((object) {
                     return Column(
                       children: [
-                        Divider(
-                          color: Theme.of(context).colorScheme.secondary,
-                          thickness: 1,
-                        ),
+                        const Divider(),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(

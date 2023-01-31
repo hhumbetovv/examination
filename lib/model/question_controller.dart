@@ -1,6 +1,5 @@
-import 'package:examination/model/result_controller.dart';
-
 import 'question.dart';
+import 'result_controller.dart';
 import 'settings.dart';
 
 class QuestionController {
@@ -60,11 +59,13 @@ class QuestionController {
 
   void changeQuestions(QuestionTypes type) {
     if (type == QuestionTypes.all) {
-      questions = allQuestions.sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
+      questions = Question.getAllQuestions(bank).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
     } else if (type == QuestionTypes.longs) {
-      questions = longAnswerQuestions.sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
+      questions =
+          Question.getLongAnswerQuestions(bank).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
     } else if (type == QuestionTypes.shorts) {
-      questions = shortAnswerQuestions.sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
+      questions =
+          Question.getShortAnswerQuestions(bank).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
     }
     randomQuestions = [...questions]..shuffle();
   }

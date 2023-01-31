@@ -1,10 +1,7 @@
-import 'package:examination/components/core/appbar.dart';
-import 'package:examination/components/core/scaffold.dart';
 import 'package:flutter/material.dart';
 
-import '../components/core/bordered_container.dart';
-import '../components/customs/custom_elevated_button.dart';
 import '../model/subjects.dart';
+import '../widgets/bordered_container.dart';
 import 'select_mode.dart';
 
 class SelectSubject extends StatelessWidget {
@@ -17,8 +14,8 @@ class SelectSubject extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCore(
-      appBar: AppBarCore(titleText: 'Examination'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Examination')),
       body: Padding(
         padding: const EdgeInsets.all(30),
         child: Center(
@@ -26,7 +23,7 @@ class SelectSubject extends StatelessWidget {
             child: Wrap(
               runSpacing: 10,
               children: subjects.map((subject) {
-                return CustomElevatedButton(
+                return ElevatedButton(
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -35,7 +32,7 @@ class SelectSubject extends StatelessWidget {
                       ),
                     ),
                   ),
-                  text: subject.title,
+                  child: Text(subject.title),
                 );
               }).toList(),
             ),
