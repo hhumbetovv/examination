@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
 import '../../model/question_controller.dart';
 import '../../model/settings.dart';
+import '../../utils/constants.dart';
 
 typedef TypeCallback = void Function(QuestionTypes type);
 

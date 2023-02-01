@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../utils/constants.dart';
 import '../bordered_container.dart';
 import '../dialog_button.dart';
 

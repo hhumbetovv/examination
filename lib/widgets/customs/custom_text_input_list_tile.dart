@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../constants.dart';
+import '../../utils/constants.dart';
 
 typedef IntCallback = void Function(int? data);
 

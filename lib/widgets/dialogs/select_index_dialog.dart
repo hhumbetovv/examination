@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../constants.dart';
 import '../../model/question_controller.dart';
+import '../../utils/constants.dart';
 import '../bordered_container.dart';
 import '../dialog_button.dart';
 

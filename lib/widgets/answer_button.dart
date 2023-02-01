@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import '../model/question.dart';
 import '../model/question_controller.dart';
+import '../utils/constants.dart';
 
 typedef BoolCallback = void Function(bool value);
 
@@ -10,7 +10,7 @@ class AnswerButton extends StatefulWidget {
   const AnswerButton({
     Key? key,
     required this.currentAnswer,
-    required this.controller,
+    this.controller,
     this.isLearning = false,
     this.singleTap,
     this.updateQuestion,

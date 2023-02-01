@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'model/subjects.dart';
-import 'pages/select_mode.dart';
-import 'pages/select_subject.dart';
-import 'theme.dart';
+import 'pages/select_view.dart';
+import 'utils/theme.dart';
 
 void main() {
   runApp(const Examination());
@@ -24,11 +23,11 @@ class _ExaminationState extends State<Examination> {
 
     return MaterialApp(
       title: 'Examination',
-      theme: appTheme.light(AppColors.colors[0]),
-      darkTheme: appTheme.dark(AppColors.colors[0]),
-      themeMode: ThemeMode.light,
+      theme: appTheme.light(AppColors.colors[3]),
+      darkTheme: appTheme.dark(AppColors.colors[3]),
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      home: subjects.length == 1 ? SelectMode(subject: subjects[0]) : SelectSubject(subjects: subjects),
+      home: SelectView(subjects: subjects),
     );
   }
 }

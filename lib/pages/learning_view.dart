@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
-import '../constants.dart';
 import '../model/subjects.dart';
+import '../utils/constants.dart';
 import '../widgets/answer_button.dart';
 import '../widgets/bordered_container.dart';
 import '../widgets/dialogs/select_index_dialog.dart';

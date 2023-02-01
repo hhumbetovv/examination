@@ -16,13 +16,6 @@ class AppColors {
   );
 
   static List<AppColors> colors = [
-    // AppColors(
-    //   Color(0xFF),
-    //   Color(0xFF),
-    //   Color(0xFF),
-    //   Color(0xFF),
-    // ),
-
     //! S - 90 => 50 V - 50 => 90
     AppColors(
       const Color(0xFF7f0c0c),
