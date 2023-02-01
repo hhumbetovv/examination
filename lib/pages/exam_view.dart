@@ -69,34 +69,32 @@ class _ExamViewState extends ExamModal {
   }
 
   //? Answers
-  Expanded get answers {
-    return Expanded(
-      child: Listener(
-        onPointerDown: (event) {
-          events.add(event);
-          setState(() {
-            if (events.length > 1) {
-              singleTap = false;
-            }
-          });
-        },
-        onPointerUp: (event) {
-          events.clear();
-          setState(() {
-            singleTap = true;
-          });
-        },
-        child: ListView(
-          physics: const BouncingScrollPhysics(),
-          children: controller.getCurrentQuestion.answers.map((answer) {
-            return AnswerButton(
-              currentAnswer: answer,
-              controller: controller,
-              singleTap: singleTap,
-              updateQuestion: (value) => updateQuestion(isCorrect: value),
-            );
-          }).toList(),
-        ),
+  Listener get answers {
+    return Listener(
+      onPointerDown: (event) {
+        events.add(event);
+        setState(() {
+          if (events.length > 1) {
+            singleTap = false;
+          }
+        });
+      },
+      onPointerUp: (event) {
+        events.clear();
+        setState(() {
+          singleTap = true;
+        });
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: controller.getCurrentQuestion.answers.map((answer) {
+          return AnswerButton(
+            currentAnswer: answer,
+            controller: controller,
+            singleTap: singleTap,
+            updateQuestion: (value) => updateQuestion(isCorrect: value),
+          );
+        }).toList(),
       ),
     );
   }
@@ -224,9 +222,19 @@ class _ExamViewState extends ExamModal {
               padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
               child: Column(
                 children: [
-                  question,
-                  const SizedBox(height: 10),
-                  answers,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          question,
+                          const SizedBox(height: 10),
+                          answers,
+                        ],
+                      ),
+                    ),
+                  ),
                   indexIndicator,
                 ],
               ),
