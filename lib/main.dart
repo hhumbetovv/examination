@@ -1,4 +1,7 @@
+import 'package:examination/global/index_cubit.dart';
+import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'model/subjects.dart';
 import 'pages/select_view.dart';
@@ -8,26 +11,37 @@ void main() {
   runApp(const Examination());
 }
 
-class Examination extends StatefulWidget {
-  const Examination({super.key});
+class Examination extends StatelessWidget {
+  const Examination({
+    Key? key,
+  }) : super(key: key);
 
-  @override
-  State<Examination> createState() => _ExaminationState();
-}
-
-class _ExaminationState extends State<Examination> {
   @override
   Widget build(BuildContext context) {
     final List<Subject> subjects = Subject.subjects;
     final AppTheme appTheme = AppTheme();
 
-    return MaterialApp(
-      title: 'Examination',
-      theme: appTheme.light(AppColors.colors[3]),
-      darkTheme: appTheme.dark(AppColors.colors[3]),
-      themeMode: ThemeMode.dark,
-      debugShowCheckedModeBanner: false,
-      home: SelectView(subjects: subjects),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => IndexCubit()),
+        BlocProvider(create: (context) => ThemeModeCubit()),
+      ],
+      child: BlocBuilder<IndexCubit, int>(
+        builder: (context, index) {
+          return BlocBuilder<ThemeModeCubit, bool>(
+            builder: (context, mode) {
+              return MaterialApp(
+                title: 'Examination',
+                theme: appTheme.light(AppColors.colors[index]),
+                darkTheme: appTheme.dark(AppColors.colors[index]),
+                themeMode: mode ? ThemeMode.dark : ThemeMode.light,
+                debugShowCheckedModeBanner: false,
+                home: SelectView(subjects: subjects),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

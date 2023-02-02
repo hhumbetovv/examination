@@ -1,4 +1,7 @@
+import 'package:examination/global/index_cubit.dart';
+import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 import '../model/result_controller.dart';
@@ -32,6 +35,24 @@ class _ResultViewState extends State<ResultView> {
     super.dispose();
   }
 
+  //? Change Theme Button
+  GestureDetector get changeThemeButton {
+    return GestureDetector(
+      onLongPress: () {
+        context.read<ThemeModeCubit>().changeMode();
+      },
+      child: IconButton(
+        onPressed: () {
+          context.read<IndexCubit>().changeIndex();
+        },
+        icon: const Icon(
+          Icons.color_lens_outlined,
+        ),
+      ),
+    );
+  }
+
+  //! Result Chart
   Center chart({bool isCenter = false}) {
     return Center(
       child: PieChart(
@@ -69,7 +90,10 @@ class _ResultViewState extends State<ResultView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Result')),
+      appBar: AppBar(
+        title: const Text('Result'),
+        actions: [changeThemeButton],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: widget.controller.getIncorrects == 0

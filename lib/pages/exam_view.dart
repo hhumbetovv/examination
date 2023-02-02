@@ -1,5 +1,7 @@
+import 'package:examination/global/index_cubit.dart';
+import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsapp_share2/whatsapp_share2.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../model/subjects.dart';
 import '../utils/constants.dart';
@@ -21,19 +23,6 @@ class ExamView extends StatefulWidget {
 }
 
 class _ExamViewState extends ExamModal {
-  //? Message Me Button
-  IconButton get waMessageButton {
-    return IconButton(
-      onPressed: () async {
-        await WhatsappShare.share(
-          text: 'Oh? Hi there',
-          phone: '994773081398',
-        );
-      },
-      icon: const Icon(Icons.question_answer_outlined),
-    );
-  }
-
   //? Settings Button
   IconButton get settingsButton {
     return IconButton(
@@ -43,6 +32,23 @@ class _ExamViewState extends ExamModal {
         });
       },
       icon: const Icon(Icons.settings),
+    );
+  }
+
+  //? Change Theme Button
+  GestureDetector get changeThemeButton {
+    return GestureDetector(
+      onLongPress: () {
+        context.read<ThemeModeCubit>().changeMode();
+      },
+      child: IconButton(
+        onPressed: () {
+          context.read<IndexCubit>().changeIndex();
+        },
+        icon: const Icon(
+          Icons.color_lens_outlined,
+        ),
+      ),
     );
   }
 
@@ -212,7 +218,7 @@ class _ExamViewState extends ExamModal {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.subject.title),
-        actions: [waMessageButton, settingsButton],
+        actions: [changeThemeButton, settingsButton],
       ),
       floatingActionButton: finishButton,
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
