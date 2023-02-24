@@ -30,6 +30,8 @@ class Examination extends StatelessWidget {
         builder: (context, index) {
           return BlocBuilder<ThemeModeCubit, bool>(
             builder: (context, mode) {
+              context.read<ThemeModeCubit>().getMode();
+              context.read<IndexCubit>().getIndex();
               return MaterialApp(
                 title: 'Examination',
                 theme: appTheme.light(AppColors.colors[index]),
