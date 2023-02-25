@@ -2,6 +2,7 @@ import 'package:examination/global/index_cubit.dart';
 import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import 'model/subjects.dart';
 import 'pages/select_view.dart';
@@ -16,10 +17,15 @@ class Examination extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  Future<void> clearCache() async {
+    await DefaultCacheManager().emptyCache();
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Subject> subjects = Subject.subjects;
     final AppTheme appTheme = AppTheme();
+    clearCache();
 
     return MultiBlocProvider(
       providers: [
