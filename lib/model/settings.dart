@@ -6,9 +6,9 @@ class Settings {
   int lastIndex;
   int count;
   //! Defaults
-  late int defaultLastIndex;
-  late int defaultFirstIndex;
-  late int defaultCount;
+  late final int defaultLastIndex;
+  late final int defaultFirstIndex;
+  late final int defaultCount;
 
   bool random;
   QuestionTypes type;

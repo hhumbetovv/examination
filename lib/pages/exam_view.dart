@@ -224,25 +224,48 @@ class _ExamViewState extends ExamModal {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          question,
-                          const SizedBox(height: 10),
-                          answers,
-                        ],
+          : GestureDetector(
+              onTap: () {
+                swipeDirection = 'zero';
+              },
+              onPanUpdate: (details) {
+                if (details.delta.dx < 0) swipeDirection = 'left';
+                if (details.delta.dx > 0) swipeDirection = 'right';
+              },
+              onPanEnd: (details) {
+                if (swipeDirection == 'zero') return;
+                if (swipeDirection == 'left') changeQuestion(increase: true);
+                if (swipeDirection == 'right') changeQuestion();
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              controller.resultController.getDuration,
+                              style: TextStyle(
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            question,
+                            const SizedBox(height: 10),
+                            answers,
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  indexIndicator,
-                ],
+                    indexIndicator,
+                  ],
+                ),
               ),
             ),
       bottomNavigationBar: bottomAppBar,

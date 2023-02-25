@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../model/question_controller.dart';
@@ -13,16 +15,47 @@ abstract class ExamModal extends State<ExamView> {
   final events = [];
   bool singleTap = true;
 
+  String swipeDirection = 'zero';
+
+  Timer? timer;
+
   @override
   void initState() {
     super.initState();
     controller = QuestionController(bank: widget.subject.bank);
     controller.initialize();
+    startTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void startTimer() {
+    setState(() {
+      timer = Timer.periodic(const Duration(seconds: 1), (_) => setCountUp());
+    });
+  }
+
+  void stopTimer() {
+    setState(() {
+      timer!.cancel();
+    });
+  }
+
+  void resetTimer() {
+    setState(() {
+      controller.resultController.setDuration(const Duration(seconds: 0));
+    });
+  }
+
+  void setCountUp() {
+    const reduceSecondsBy = 1;
+    setState(() {
+      final seconds = controller.resultController.duration.inSeconds + reduceSecondsBy;
+      controller.resultController.setDuration(Duration(seconds: seconds));
+    });
   }
 
   void setIsLoading({bool value = false}) async {
@@ -46,6 +79,7 @@ abstract class ExamModal extends State<ExamView> {
     final result = await settingsDialog(context, controller);
     if (result != null && result) {
       resetQuestions();
+      resetTimer();
     }
   }
 
@@ -67,7 +101,6 @@ abstract class ExamModal extends State<ExamView> {
   }
 
   void onFinishButtonPressed() async {
-    ResultController currentController = controller.resultController.finalResults;
     final result = controller.resultController.blanks != 0
         ? await finishDialog(
             context,
@@ -75,17 +108,22 @@ abstract class ExamModal extends State<ExamView> {
           )
         : true;
     if ((result ?? false) && mounted) {
+      ResultController currentController = controller.resultController.finalResults;
       setIsLoading(value: true);
       setState(() {
         resetQuestions();
+        stopTimer();
+        resetTimer();
       });
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ResultView(
-            controller: currentController,
-          ),
-        ),
-      );
+      Navigator.of(context)
+          .push(
+            MaterialPageRoute(
+              builder: (context) => ResultView(
+                controller: currentController,
+              ),
+            ),
+          )
+          .then((_) => startTimer());
     }
     setIsLoading(value: false);
   }

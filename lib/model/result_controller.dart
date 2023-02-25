@@ -4,20 +4,27 @@ class ResultController {
   int blanks = 0;
   List<Question> corrects = [];
   List<Question> incorrects = [];
+  Duration duration = const Duration(seconds: 0);
 
-  ResultController({required int count, List<Question>? corrects, List<Question>? incorrects}) {
+  ResultController({
+    required int count,
+    List<Question>? corrects,
+    List<Question>? incorrects,
+    Duration? duration,
+  }) {
     blanks = count;
     this.corrects = corrects ?? [];
     this.incorrects = incorrects ?? [];
-  }
-
-  @override
-  String toString() {
-    return 'blanks: $blanks, corrects: $corrects, incorrects: $incorrects';
+    this.duration = duration ?? const Duration(seconds: 0);
   }
 
   ResultController get finalResults {
-    return ResultController(count: blanks, corrects: corrects, incorrects: incorrects);
+    return ResultController(
+      count: blanks,
+      corrects: corrects,
+      incorrects: incorrects,
+      duration: duration,
+    );
   }
 
   void updateResult({required Question question, required bool isCorrect}) {
@@ -35,6 +42,11 @@ class ResultController {
     blanks = count;
     corrects = [];
     incorrects = [];
+    duration = const Duration(seconds: 0);
+  }
+
+  void setDuration(Duration value) {
+    duration = value;
   }
 
   int get getCurrentResult {
@@ -52,5 +64,13 @@ class ResultController {
 
   int get getIncorrects {
     return incorrects.length;
+  }
+
+  String get getDuration {
+    String strDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = strDigits(duration.inHours.remainder(24));
+    final minutes = strDigits(duration.inMinutes.remainder(60));
+    final seconds = strDigits(duration.inSeconds.remainder(60));
+    return '$hours:$minutes:$seconds';
   }
 }

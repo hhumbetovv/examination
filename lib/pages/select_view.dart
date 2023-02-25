@@ -22,7 +22,7 @@ class SelectView extends StatefulWidget {
 }
 
 class _SelectViewState extends State<SelectView> {
-  //? Message Me Button
+  //! Whatsapp Message Button
   IconButton get waMessageButton {
     return IconButton(
       onPressed: () async {
@@ -35,7 +35,7 @@ class _SelectViewState extends State<SelectView> {
     );
   }
 
-  //? Change Theme Button
+  //! Change Theme Button
   GestureDetector get changeThemeButton {
     return GestureDetector(
       onLongPress: () {

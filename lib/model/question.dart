@@ -1,3 +1,5 @@
+import 'package:examination/model/settings.dart';
+
 class Question {
   final String question;
   final List<Answer> answers;
@@ -15,32 +17,28 @@ class Question {
     isAnswered = true;
   }
 
-  //! All Questions
-  static List<Question> getAllQuestions(String bank) {
-    return createQuestionsList(bank)
-        .map(
-          (item) => Question(
-            question: item[0],
-            answers: [
-              Answer(answer: item[1], isCorrectAnswer: true),
-              Answer(answer: item[2]),
-              Answer(answer: item[3]),
-              Answer(answer: item[4]),
-              Answer(answer: item[5]),
-            ]..shuffle(),
-          ),
-        )
-        .toList();
-  }
+  static List<Question> getQuestions(String bank, QuestionTypes type) {
+    List<Question> list = [];
+    _createQuestionsList(bank).forEach((item) {
+      bool checker() {
+        switch (type) {
+          case QuestionTypes.longs:
+            return item[1].length > item[2].length &&
+                item[1].length > item[3].length &&
+                item[1].length > item[4].length &&
+                item[1].length > item[5].length;
+          case QuestionTypes.shorts:
+            return !(item[1].length > item[2].length &&
+                item[1].length > item[3].length &&
+                item[1].length > item[4].length &&
+                item[1].length > item[5].length);
+          default:
+            return true;
+        }
+      }
 
-  //! Questions with Long Correct Answers
-  static List<Question> getLongAnswerQuestions(String bank) {
-    List<Question> longAnswerQuestionList = [];
-    createQuestionsList(bank).forEach((item) {
-      String correctAnswer = item[1];
-      bool checker(String element) => correctAnswer.length > element.length;
-      if (checker(item[2]) && checker(item[3]) && checker(item[4]) && checker(item[5])) {
-        longAnswerQuestionList.add(
+      if (checker()) {
+        list.add(
           Question(
             question: item[0],
             answers: [
@@ -54,31 +52,7 @@ class Question {
         );
       }
     });
-    return longAnswerQuestionList;
-  }
-
-  //! Questions with Short Correct Answers
-  static List<Question> getShortAnswerQuestions(String bank) {
-    List<Question> shortAnswerQuestionList = [];
-    createQuestionsList(bank).forEach((item) {
-      String correctAnswer = item[1];
-      bool checker(String element) => correctAnswer.length > element.length;
-      if (!(checker(item[2]) && checker(item[3]) && checker(item[4]) && checker(item[5]))) {
-        shortAnswerQuestionList.add(
-          Question(
-            question: item[0],
-            answers: [
-              Answer(answer: item[1], isCorrectAnswer: true),
-              Answer(answer: item[2]),
-              Answer(answer: item[3]),
-              Answer(answer: item[4]),
-              Answer(answer: item[5]),
-            ]..shuffle(),
-          ),
-        );
-      }
-    });
-    return shortAnswerQuestionList;
+    return list;
   }
 }
 
@@ -95,7 +69,7 @@ class Answer {
 }
 
 //! Create Questions List from Bank
-List<List<String>> createQuestionsList(String bank) {
+List<List<String>> _createQuestionsList(String bank) {
   List<String> questionList = bank.split('spacer');
   List<String> dublicatedList = [];
   List<List<String>> finalList = [];

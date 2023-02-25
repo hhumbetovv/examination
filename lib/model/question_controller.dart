@@ -27,7 +27,7 @@ class QuestionController {
   QuestionController({required this.bank});
 
   void initialize({bool isLearning = false}) {
-    allQuestions = Question.getAllQuestions(bank);
+    allQuestions = Question.getQuestions(bank, QuestionTypes.all);
     allQuestionSettings = Settings(
       firstIndex: 0,
       lastIndex: allQuestions.length - 1,
@@ -35,7 +35,7 @@ class QuestionController {
       random: !isLearning,
       type: QuestionTypes.all,
     );
-    longAnswerQuestions = Question.getLongAnswerQuestions(bank);
+    longAnswerQuestions = Question.getQuestions(bank, QuestionTypes.longs);
     longAnswerQuestionSettings = Settings(
       firstIndex: 0,
       lastIndex: longAnswerQuestions.length - 1,
@@ -43,7 +43,7 @@ class QuestionController {
       random: !isLearning,
       type: QuestionTypes.longs,
     );
-    shortAnswerQuestions = Question.getShortAnswerQuestions(bank);
+    shortAnswerQuestions = Question.getQuestions(bank, QuestionTypes.shorts);
     shortAnswerQuestionSettings = Settings(
       firstIndex: 0,
       lastIndex: shortAnswerQuestions.length - 1,
@@ -58,15 +58,7 @@ class QuestionController {
   }
 
   void changeQuestions(QuestionTypes type) {
-    if (type == QuestionTypes.all) {
-      questions = Question.getAllQuestions(bank).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
-    } else if (type == QuestionTypes.longs) {
-      questions =
-          Question.getLongAnswerQuestions(bank).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
-    } else if (type == QuestionTypes.shorts) {
-      questions =
-          Question.getShortAnswerQuestions(bank).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
-    }
+    questions = Question.getQuestions(bank, type);
     randomQuestions = [...questions]..shuffle();
   }
 

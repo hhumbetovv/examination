@@ -23,6 +23,7 @@ class ResultView extends StatefulWidget {
 
 class _ResultViewState extends State<ResultView> {
   late List<bool> _isOpen;
+  String floatingActionButtonLabel = 'Expand all';
 
   @override
   void initState() {
@@ -33,6 +34,17 @@ class _ResultViewState extends State<ResultView> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void onFloatingActionButtonPressed() {
+    if (_isOpen.any((element) => element == false)) {
+      _isOpen = _isOpen.map((e) => true).toList();
+      floatingActionButtonLabel = 'Compress all';
+    } else {
+      _isOpen = _isOpen.map((e) => false).toList();
+      floatingActionButtonLabel = 'Expand all';
+    }
+    setState(() {});
   }
 
   //? Change Theme Button
@@ -94,6 +106,12 @@ class _ResultViewState extends State<ResultView> {
         title: const Text('Result'),
         actions: [changeThemeButton],
       ),
+      floatingActionButton: _isOpen.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: onFloatingActionButtonPressed,
+              label: Text(floatingActionButtonLabel),
+            )
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: widget.controller.getIncorrects == 0
@@ -101,6 +119,15 @@ class _ResultViewState extends State<ResultView> {
             : ListView(
                 physics: const BouncingScrollPhysics(),
                 children: [
+                  Text(
+                    widget.controller.getDuration,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: chart(),
@@ -112,6 +139,11 @@ class _ResultViewState extends State<ResultView> {
                           onTap: () {
                             setState(() {
                               _isOpen[object.key] = !_isOpen[object.key];
+                              if (_isOpen.any((element) => element == false)) {
+                                floatingActionButtonLabel = 'Expand all';
+                              } else {
+                                floatingActionButtonLabel = 'Compress all';
+                              }
                             });
                           },
                           borderRadius: Constants.radiusMedium,
@@ -127,18 +159,18 @@ class _ResultViewState extends State<ResultView> {
                             ),
                           ),
                         ),
-                        AnimatedCrossFade(
+                        AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
-                          secondChild: const SizedBox(width: double.infinity, height: 10),
-                          crossFadeState: _isOpen[object.key] ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                          firstChild: Column(
-                            children: object.value.answers.map((answer) {
-                              return AnswerButton(
-                                currentAnswer: answer,
-                                isLearning: true,
-                              );
-                            }).toList(),
-                          ),
+                          child: _isOpen[object.key]
+                              ? Column(
+                                  children: object.value.answers.map((answer) {
+                                    return AnswerButton(
+                                      currentAnswer: answer,
+                                      isLearning: true,
+                                    );
+                                  }).toList(),
+                                )
+                              : const SizedBox(width: double.infinity, height: 10),
                         ),
                       ],
                     );
