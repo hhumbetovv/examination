@@ -154,11 +154,12 @@ class AppTheme {
         ),
       ),
       //! Highlight and Splash Colors
+      splashFactory: InkRipple.splashFactory,
       highlightColor: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2),
       splashColor: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2),
       //! Text Theme
       textTheme: TextTheme(
-        bodyText2: TextStyle(
+        bodyMedium: TextStyle(
           fontSize: Constants.fontSizeSmall,
           color: isDark ? Colors.white : Colors.black,
         ),
