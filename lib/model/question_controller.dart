@@ -58,7 +58,7 @@ class QuestionController {
   }
 
   void changeQuestions(QuestionTypes type) {
-    questions = Question.getQuestions(bank, type);
+    questions = Question.getQuestions(bank, type).sublist(currentSettings.firstIndex, currentSettings.lastIndex + 1);
     randomQuestions = [...questions]..shuffle();
   }
 
