@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../model/question_controller.dart';
 import '../model/result_controller.dart';
 import '../widgets/dialogs/finish_dialog.dart';
-import '../widgets/dialogs/settings_dialog.dart';
+import '../widgets/dialogs/settings_modal.dart';
 import 'exam_view.dart';
 import 'result_view.dart';
 
@@ -29,6 +29,7 @@ abstract class ExamModal extends State<ExamView> {
 
   @override
   void dispose() {
+    stopTimer();
     super.dispose();
   }
 
@@ -76,7 +77,7 @@ abstract class ExamModal extends State<ExamView> {
   }
 
   void updateSettings(BuildContext context) async {
-    final result = await settingsDialog(context, controller);
+    final result = await settingsModal(context, controller);
     if (result != null && result) {
       resetQuestions();
       resetTimer();

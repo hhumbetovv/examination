@@ -12,6 +12,9 @@ Future<bool?> finishDialog(BuildContext context, String text) async {
       return AlertDialog(
         contentPadding: const EdgeInsets.all(10),
         content: BorderedContainer(
+          constraints: const BoxConstraints(
+            maxWidth: 480,
+          ),
           child: Text(
             text,
             style: const TextStyle(

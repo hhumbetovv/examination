@@ -1,7 +1,9 @@
 import 'package:examination/global/index_cubit.dart';
 import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../model/subjects.dart';
 import '../utils/constants.dart';
@@ -54,7 +56,7 @@ class _LearningViewState extends LearningModal {
   //? Question
   BorderedContainer get question {
     return BorderedContainer(
-      alignment: Alignment.centerLeft,
+      alignment: ResponsiveBreakpoints.of(context).isDesktop ? Alignment.topLeft : Alignment.centerLeft,
       child: Text(
         controller.getCurrentQuestion.question,
         style: const TextStyle(
@@ -65,19 +67,14 @@ class _LearningViewState extends LearningModal {
   }
 
   //? Answers
-  Expanded get answers {
-    return Expanded(
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: controller.getCurrentQuestion.answers.map((answer) {
-          return AnswerButton(
-            currentAnswer: answer,
-            controller: controller,
-            isLearning: true,
-          );
-        }).toList(),
-      ),
-    );
+  List<AnswerButton> get answers {
+    return controller.getCurrentQuestion.answers.map((answer) {
+      return AnswerButton(
+        currentAnswer: answer,
+        controller: controller,
+        isLearning: true,
+      );
+    }).toList();
   }
 
   //! Bottom AppBar
@@ -144,26 +141,52 @@ class _LearningViewState extends LearningModal {
         title: Text(widget.subject.title),
         actions: [changeThemeButton, settingsButton],
       ),
-      body: GestureDetector(
-        onTap: () {
-          swipeDirection = 'zero';
+      body: RawKeyboardListener(
+        focusNode: FocusNode(),
+        onKey: (RawKeyEvent event) {
+          if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) changeQuestion(increase: true);
+          if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) changeQuestion();
         },
-        onPanUpdate: (details) {
-          if (details.delta.dx < 0) swipeDirection = 'left';
-          if (details.delta.dx > 0) swipeDirection = 'right';
-        },
-        onPanEnd: (details) {
-          if (swipeDirection == 'zero') return;
-          if (swipeDirection == 'left') changeQuestion(increase: true);
-          if (swipeDirection == 'right') changeQuestion();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(15) + const EdgeInsets.only(bottom: Constants.appBarHeight - 10),
-          child: Column(
-            children: [
-              question,
-              answers,
-            ],
+        child: GestureDetector(
+          onTap: () {
+            swipeDirection = 'zero';
+          },
+          onPanUpdate: (details) {
+            if (details.delta.dx < 0) swipeDirection = 'left';
+            if (details.delta.dx > 0) swipeDirection = 'right';
+          },
+          onPanEnd: (details) {
+            if (swipeDirection == 'zero') return;
+            if (swipeDirection == 'left') changeQuestion(increase: true);
+            if (swipeDirection == 'right') changeQuestion();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15) + const EdgeInsets.only(bottom: Constants.appBarHeight - 10),
+            child: ResponsiveBreakpoints.of(context).isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: question),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            children: answers,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        question,
+                        ...answers,
+                      ],
+                    ),
+                  ),
           ),
         ),
       ),

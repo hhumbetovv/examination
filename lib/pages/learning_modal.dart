@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/question_controller.dart';
-import '../widgets/dialogs/settings_dialog.dart';
+import '../widgets/dialogs/settings_modal.dart';
 import 'learning_view.dart';
 
 abstract class LearningModal extends State<LearningView> {
@@ -21,7 +21,7 @@ abstract class LearningModal extends State<LearningView> {
   }
 
   void updateSettings(BuildContext context) async {
-    final result = await settingsDialog(context, controller);
+    final result = await settingsModal(context, controller);
     if (result ?? false) {
       setState(() {
         controller.resetValues();

@@ -1,7 +1,9 @@
 import 'package:examination/global/index_cubit.dart';
 import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../model/subjects.dart';
 import '../utils/constants.dart';
@@ -64,7 +66,7 @@ class _ExamViewState extends ExamModal {
   //? Question
   BorderedContainer get question {
     return BorderedContainer(
-      alignment: Alignment.centerLeft,
+      alignment: ResponsiveBreakpoints.of(context).isDesktop ? Alignment.topLeft : Alignment.centerLeft,
       child: Text(
         controller.getCurrentQuestion.question,
         style: const TextStyle(
@@ -91,16 +93,19 @@ class _ExamViewState extends ExamModal {
           singleTap = true;
         });
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: controller.getCurrentQuestion.answers.map((answer) {
-          return AnswerButton(
-            currentAnswer: answer,
-            controller: controller,
-            singleTap: singleTap,
-            updateQuestion: (value) => updateQuestion(isCorrect: value),
-          );
-        }).toList(),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: controller.getCurrentQuestion.answers.map((answer) {
+            return AnswerButton(
+              currentAnswer: answer,
+              controller: controller,
+              singleTap: singleTap,
+              updateQuestion: (value) => updateQuestion(isCorrect: value),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -237,34 +242,48 @@ class _ExamViewState extends ExamModal {
                 if (swipeDirection == 'left') changeQuestion(increase: true);
                 if (swipeDirection == 'right') changeQuestion();
               },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              controller.resultController.getDuration,
-                              style: TextStyle(
-                                fontSize: 50,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            question,
-                            const SizedBox(height: 10),
-                            answers,
-                          ],
+              child: RawKeyboardListener(
+                focusNode: FocusNode(),
+                onKey: (RawKeyEvent event) {
+                  if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) changeQuestion(increase: true);
+                  if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) changeQuestion();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                  child: Column(
+                    children: [
+                      Text(
+                        controller.resultController.getDuration,
+                        style: TextStyle(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
-                    ),
-                    indexIndicator,
-                  ],
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ResponsiveBreakpoints.of(context).isDesktop
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(child: question),
+                                  const SizedBox(width: 10),
+                                  Expanded(child: answers),
+                                ],
+                              )
+                            : SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    question,
+                                    answers,
+                                  ],
+                                ),
+                              ),
+                      ),
+                      indexIndicator,
+                    ],
+                  ),
                 ),
               ),
             ),
