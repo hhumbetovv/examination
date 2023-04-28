@@ -3,6 +3,7 @@ import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import 'model/subjects.dart';
 import 'pages/select_view.dart';
@@ -40,6 +41,13 @@ class Examination extends StatelessWidget {
               context.read<IndexCubit>().getIndex();
               return MaterialApp(
                 title: 'Examination',
+                builder: (context, child) {
+                  return ResponsiveBreakpoints.builder(child: child!, breakpoints: [
+                    const Breakpoint(start: 0, end: 450, name: MOBILE),
+                    const Breakpoint(start: 451, end: 800, name: TABLET),
+                    const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                  ]);
+                },
                 theme: appTheme.light(AppColors.colors[index]),
                 darkTheme: appTheme.dark(AppColors.colors[index]),
                 themeMode: mode ? ThemeMode.dark : ThemeMode.light,

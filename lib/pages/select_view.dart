@@ -66,6 +66,9 @@ class _SelectViewState extends State<SelectView> {
         padding: const EdgeInsets.all(30),
         child: Center(
           child: BorderedContainer(
+            constraints: const BoxConstraints(
+              maxWidth: 768,
+            ),
             child: Wrap(
               runSpacing: 10,
               children: widget.subjects.length == 1

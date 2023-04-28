@@ -34,7 +34,9 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.1
   flutter_cache_manager: ^3.3.0
+  modal_side_sheet: ^0.0.1
   pie_chart: ^5.3.2
+  responsive_framework: ^1.0.0
   shared_preferences: ^2.0.18
   whatsapp_share2: ^2.0.2
 

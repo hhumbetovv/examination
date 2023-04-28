@@ -3,6 +3,7 @@ import 'package:examination/global/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 import '../model/result_controller.dart';
 import '../utils/constants.dart';
@@ -99,6 +100,52 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
+  List<Column> get questions {
+    return widget.controller.incorrects.asMap().entries.map((object) {
+      return Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                _isOpen[object.key] = !_isOpen[object.key];
+                if (_isOpen.any((element) => element == false)) {
+                  floatingActionButtonLabel = 'Expand all';
+                } else {
+                  floatingActionButtonLabel = 'Compress all';
+                }
+              });
+            },
+            borderRadius: Constants.radiusMedium,
+            child: BorderedContainer(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  object.value.question,
+                  style: const TextStyle(
+                    fontSize: Constants.fontSizeLarge,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: _isOpen[object.key]
+                ? Column(
+                    children: object.value.answers.map((answer) {
+                      return AnswerButton(
+                        currentAnswer: answer,
+                        isLearning: true,
+                      );
+                    }).toList(),
+                  )
+                : const SizedBox(width: double.infinity, height: 10),
+          ),
+        ],
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,53 +175,34 @@ class _ResultViewState extends State<ResultView> {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: chart(),
-                  ),
-                  ...widget.controller.incorrects.asMap().entries.map((object) {
-                    return Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              _isOpen[object.key] = !_isOpen[object.key];
-                              if (_isOpen.any((element) => element == false)) {
-                                floatingActionButtonLabel = 'Expand all';
-                              } else {
-                                floatingActionButtonLabel = 'Compress all';
-                              }
-                            });
-                          },
-                          borderRadius: Constants.radiusMedium,
-                          child: BorderedContainer(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                object.value.question,
-                                style: const TextStyle(
-                                  fontSize: Constants.fontSizeLarge,
-                                ),
+                  ResponsiveBreakpoints.of(context).isDesktop
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: chart(),
                               ),
                             ),
-                          ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  children: questions,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: chart(),
+                            ),
+                            ...questions,
+                          ],
                         ),
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: _isOpen[object.key]
-                              ? Column(
-                                  children: object.value.answers.map((answer) {
-                                    return AnswerButton(
-                                      currentAnswer: answer,
-                                      isLearning: true,
-                                    );
-                                  }).toList(),
-                                )
-                              : const SizedBox(width: double.infinity, height: 10),
-                        ),
-                      ],
-                    );
-                  }).toList(),
                 ],
               ),
       ),
