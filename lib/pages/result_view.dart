@@ -65,6 +65,18 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
+  Text get timer {
+    return Text(
+      widget.controller.getDuration,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 50,
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.secondary,
+      ),
+    );
+  }
+
   //! Result Chart
   Center chart({bool isCenter = false}) {
     return Center(
@@ -100,48 +112,50 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  List<Column> get questions {
+  List<Expanded> get questions {
     return widget.controller.incorrects.asMap().entries.map((object) {
-      return Column(
-        children: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                _isOpen[object.key] = !_isOpen[object.key];
-                if (_isOpen.any((element) => element == false)) {
-                  floatingActionButtonLabel = 'Expand all';
-                } else {
-                  floatingActionButtonLabel = 'Compress all';
-                }
-              });
-            },
-            borderRadius: Constants.radiusMedium,
-            child: BorderedContainer(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  object.value.question,
-                  style: const TextStyle(
-                    fontSize: Constants.fontSizeLarge,
+      return Expanded(
+        child: Column(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _isOpen[object.key] = !_isOpen[object.key];
+                  if (_isOpen.any((element) => element == false)) {
+                    floatingActionButtonLabel = 'Expand all';
+                  } else {
+                    floatingActionButtonLabel = 'Compress all';
+                  }
+                });
+              },
+              borderRadius: Constants.radiusMedium,
+              child: BorderedContainer(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    object.value.question,
+                    style: const TextStyle(
+                      fontSize: Constants.fontSizeLarge,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: _isOpen[object.key]
-                ? Column(
-                    children: object.value.answers.map((answer) {
-                      return AnswerButton(
-                        currentAnswer: answer,
-                        isLearning: true,
-                      );
-                    }).toList(),
-                  )
-                : const SizedBox(width: double.infinity, height: 10),
-          ),
-        ],
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: _isOpen[object.key]
+                  ? Column(
+                      children: object.value.answers.map((answer) {
+                        return AnswerButton(
+                          currentAnswer: answer,
+                          isLearning: true,
+                        );
+                      }).toList(),
+                    )
+                  : const SizedBox(width: double.infinity, height: 10),
+            ),
+          ],
+        ),
       );
     }).toList();
   }
@@ -162,21 +176,19 @@ class _ResultViewState extends State<ResultView> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: widget.controller.getIncorrects == 0
-            ? chart(isCenter: true)
-            : ListView(
-                physics: const BouncingScrollPhysics(),
+            ? Column(
                 children: [
-                  Text(
-                    widget.controller.getDuration,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                  ResponsiveBreakpoints.of(context).isDesktop
-                      ? Row(
+                  timer,
+                  Expanded(child: chart(isCenter: true)),
+                ],
+              )
+            : ResponsiveBreakpoints.of(context).isDesktop
+                ? Column(
+                    children: [
+                      timer,
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: Padding(
@@ -185,26 +197,26 @@ class _ResultViewState extends State<ResultView> {
                               ),
                             ),
                             Expanded(
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                child: Column(
-                                  children: questions,
-                                ),
+                              child: ListView(
+                                children: questions,
                               ),
-                            )
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: chart(),
                             ),
-                            ...questions,
                           ],
                         ),
-                ],
-              ),
+                      )
+                    ],
+                  )
+                : ListView(
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      timer,
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: chart(),
+                      ),
+                      ...questions,
+                    ],
+                  ),
       ),
     );
   }

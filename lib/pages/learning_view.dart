@@ -67,19 +67,14 @@ class _LearningViewState extends LearningModal {
   }
 
   //? Answers
-  Expanded get answers {
-    return Expanded(
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: controller.getCurrentQuestion.answers.map((answer) {
-          return AnswerButton(
-            currentAnswer: answer,
-            controller: controller,
-            isLearning: true,
-          );
-        }).toList(),
-      ),
-    );
+  List<AnswerButton> get answers {
+    return controller.getCurrentQuestion.answers.map((answer) {
+      return AnswerButton(
+        currentAnswer: answer,
+        controller: controller,
+        isLearning: true,
+      );
+    }).toList();
   }
 
   //! Bottom AppBar
@@ -173,14 +168,24 @@ class _LearningViewState extends LearningModal {
                     children: [
                       Expanded(child: question),
                       const SizedBox(width: 10),
-                      answers,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            children: answers,
+                          ),
+                        ),
+                      )
                     ],
                   )
-                : Column(
-                    children: [
-                      question,
-                      answers,
-                    ],
+                : SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        question,
+                        ...answers,
+                      ],
+                    ),
                   ),
           ),
         ),

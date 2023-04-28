@@ -271,11 +271,14 @@ class _ExamViewState extends ExamModal {
                                   Expanded(child: answers),
                                 ],
                               )
-                            : Column(
-                                children: [
-                                  question,
-                                  answers,
-                                ],
+                            : SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    question,
+                                    answers,
+                                  ],
+                                ),
                               ),
                       ),
                       indexIndicator,
