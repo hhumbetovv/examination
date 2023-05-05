@@ -112,50 +112,48 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  List<Expanded> get questions {
+  List<Column> get questions {
     return widget.controller.incorrects.asMap().entries.map((object) {
-      return Expanded(
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _isOpen[object.key] = !_isOpen[object.key];
-                  if (_isOpen.any((element) => element == false)) {
-                    floatingActionButtonLabel = 'Expand all';
-                  } else {
-                    floatingActionButtonLabel = 'Compress all';
-                  }
-                });
-              },
-              borderRadius: Constants.radiusMedium,
-              child: BorderedContainer(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    object.value.question,
-                    style: const TextStyle(
-                      fontSize: Constants.fontSizeLarge,
-                    ),
+      return Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                _isOpen[object.key] = !_isOpen[object.key];
+                if (_isOpen.any((element) => element == false)) {
+                  floatingActionButtonLabel = 'Expand all';
+                } else {
+                  floatingActionButtonLabel = 'Compress all';
+                }
+              });
+            },
+            borderRadius: Constants.radiusMedium,
+            child: BorderedContainer(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  object.value.question,
+                  style: const TextStyle(
+                    fontSize: Constants.fontSizeLarge,
                   ),
                 ),
               ),
             ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: _isOpen[object.key]
-                  ? Column(
-                      children: object.value.answers.map((answer) {
-                        return AnswerButton(
-                          currentAnswer: answer,
-                          isLearning: true,
-                        );
-                      }).toList(),
-                    )
-                  : const SizedBox(width: double.infinity, height: 10),
-            ),
-          ],
-        ),
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: _isOpen[object.key]
+                ? Column(
+                    children: object.value.answers.map((answer) {
+                      return AnswerButton(
+                        currentAnswer: answer,
+                        isLearning: true,
+                      );
+                    }).toList(),
+                  )
+                : const SizedBox(width: double.infinity, height: 10),
+          ),
+        ],
       );
     }).toList();
   }

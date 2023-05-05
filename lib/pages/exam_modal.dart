@@ -29,7 +29,9 @@ abstract class ExamModal extends State<ExamView> {
 
   @override
   void dispose() {
-    stopTimer();
+    if (timer != null) {
+      timer!.cancel();
+    }
     super.dispose();
   }
 
