@@ -1,15 +1,21 @@
-import 'package:examination/global/index_cubit.dart';
-import 'package:examination/global/theme_mode_cubit.dart';
+import 'package:examination/cubits/index_cubit.dart';
+import 'package:examination/cubits/theme_mode_cubit.dart';
+import 'package:examination/pages/login/login_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import 'model/subjects.dart';
+import 'firebase_options.dart';
+import 'model/subject.dart';
 import 'pages/select_view.dart';
 import 'utils/theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const Examination());
 }
 
@@ -18,15 +24,10 @@ class Examination extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  Future<void> clearCache() async {
-    await DefaultCacheManager().emptyCache();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final List<Subject> subjects = Subject.subjects;
+    final List<SubjectModel> subjects = SubjectModel.subjects;
     final AppTheme appTheme = AppTheme();
-    clearCache();
 
     return MultiBlocProvider(
       providers: [
@@ -52,7 +53,7 @@ class Examination extends StatelessWidget {
                 darkTheme: appTheme.dark(AppColors.colors[index]),
                 themeMode: mode ? ThemeMode.dark : ThemeMode.light,
                 debugShowCheckedModeBanner: false,
-                home: SelectView(subjects: subjects),
+                home: subjects.isNotEmpty ? SelectView(subjects: subjects) : const LoginView(),
               );
             },
           );

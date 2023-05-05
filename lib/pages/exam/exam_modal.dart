@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../model/question_controller.dart';
-import '../model/result_controller.dart';
-import '../widgets/dialogs/finish_dialog.dart';
-import '../widgets/dialogs/settings_modal.dart';
+import '../../model/question_controller.dart';
+import '../../model/result_controller.dart';
+import '../../widgets/dialogs/finish_dialog.dart';
+import '../../widgets/dialogs/settings_modal.dart';
+import '../result_view.dart';
 import 'exam_view.dart';
-import 'result_view.dart';
 
 abstract class ExamModal extends State<ExamView> {
   late final QuestionController controller;

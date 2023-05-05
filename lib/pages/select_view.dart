@@ -1,13 +1,13 @@
-import 'package:examination/global/index_cubit.dart';
-import 'package:examination/global/theme_mode_cubit.dart';
+import 'package:examination/cubits/index_cubit.dart';
+import 'package:examination/cubits/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsapp_share2/whatsapp_share2.dart';
 
-import '../model/subjects.dart';
+import '../model/subject.dart';
 import '../widgets/bordered_container.dart';
-import 'exam_view.dart';
-import 'learning_view.dart';
+import 'exam/exam_view.dart';
+import 'learning/learning_view.dart';
 
 class SelectView extends StatefulWidget {
   const SelectView({
@@ -15,7 +15,7 @@ class SelectView extends StatefulWidget {
     required this.subjects,
   }) : super(key: key);
 
-  final List<Subject> subjects;
+  final List<SubjectModel> subjects;
 
   @override
   State<SelectView> createState() => _SelectViewState();

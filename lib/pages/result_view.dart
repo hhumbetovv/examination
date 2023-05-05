@@ -1,5 +1,5 @@
-import 'package:examination/global/index_cubit.dart';
-import 'package:examination/global/theme_mode_cubit.dart';
+import 'package:examination/cubits/index_cubit.dart';
+import 'package:examination/cubits/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pie_chart/pie_chart.dart';

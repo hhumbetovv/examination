@@ -1,15 +1,15 @@
-import 'package:examination/global/index_cubit.dart';
-import 'package:examination/global/theme_mode_cubit.dart';
+import 'package:examination/cubits/index_cubit.dart';
+import 'package:examination/cubits/theme_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../model/subjects.dart';
-import '../utils/constants.dart';
-import '../widgets/answer_button.dart';
-import '../widgets/bordered_container.dart';
-import '../widgets/dialogs/select_index_dialog.dart';
+import '../../model/subject.dart';
+import '../../utils/constants.dart';
+import '../../widgets/answer_button.dart';
+import '../../widgets/bordered_container.dart';
+import '../../widgets/dialogs/select_index_dialog.dart';
 import 'learning_modal.dart';
 
 class LearningView extends StatefulWidget {
@@ -18,7 +18,7 @@ class LearningView extends StatefulWidget {
     required this.subject,
   }) : super(key: key);
 
-  final Subject subject;
+  final SubjectModel subject;
 
   @override
   State<LearningView> createState() => _LearningViewState();
