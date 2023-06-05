@@ -1,6 +1,8 @@
+import 'dart:html' as html;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_share2/whatsapp_share2.dart';
 
 import '../../cubits/index_cubit.dart';
 import '../../cubits/theme_mode_cubit.dart';
@@ -22,10 +24,12 @@ class _LoginViewState extends LoginModal {
   IconButton get waMessageButton {
     return IconButton(
       onPressed: () async {
-        await WhatsappShare.share(
-          text: 'Oh? Hi there',
-          phone: '994773081398',
-        );
+        //! Change this for platforms
+        // await WhatsappShare.share(
+        //   text: 'Oh? Hi there',
+        //   phone: '994503281398',
+        // );
+        html.window.open('https://wa.me/+994503281398', "_blank");
       },
       icon: const Icon(Icons.question_answer_outlined),
     );
@@ -55,7 +59,7 @@ class _LoginViewState extends LoginModal {
         title: const Text('Login'),
         actions: [
           changeThemeButton,
-          waMessageButton,
+          if (kIsWeb || defaultTargetPlatform == TargetPlatform.android) waMessageButton,
         ],
       ),
       body: Padding(
@@ -73,6 +77,7 @@ class _LoginViewState extends LoginModal {
                 TextInput(
                   label: 'password',
                   controller: passwordController,
+                  obscureText: true,
                 ),
                 ElevatedButton(
                   onPressed: isLoading ? null : onLogInPressed,

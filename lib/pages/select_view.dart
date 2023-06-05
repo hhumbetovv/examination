@@ -1,8 +1,10 @@
+import 'dart:html' as html;
+
 import 'package:examination/cubits/index_cubit.dart';
 import 'package:examination/cubits/theme_mode_cubit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whatsapp_share2/whatsapp_share2.dart';
 
 import '../model/subject.dart';
 import '../widgets/bordered_container.dart';
@@ -26,10 +28,12 @@ class _SelectViewState extends State<SelectView> {
   IconButton get waMessageButton {
     return IconButton(
       onPressed: () async {
-        await WhatsappShare.share(
-          text: 'Oh? Hi there',
-          phone: '994773081398',
-        );
+        //! Change this for platforms
+        // await WhatsappShare.share(
+        //   text: 'Oh? Hi there',
+        //   phone: '994503281398',
+        // );
+        html.window.open('https://wa.me/+994503281398', "_blank");
       },
       icon: const Icon(Icons.question_answer_outlined),
     );
@@ -59,7 +63,7 @@ class _SelectViewState extends State<SelectView> {
         title: const Text('Examination'),
         actions: [
           changeThemeButton,
-          waMessageButton,
+          if (kIsWeb || defaultTargetPlatform == TargetPlatform.android) waMessageButton,
         ],
       ),
       body: Padding(

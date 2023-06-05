@@ -12,6 +12,7 @@ import 'pages/select_view.dart';
 import 'utils/theme.dart';
 
 void main() async {
+  //! Enable when using web
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

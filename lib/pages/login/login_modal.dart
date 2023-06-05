@@ -45,14 +45,15 @@ abstract class LoginModal extends State<LoginView> {
         return SubjectModel.fromJson(doc.data());
       }).toList();
 
-      if (mounted) {}
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) {
-          return SelectView(
-            subjects: subjects,
-          );
-        },
-      ));
+      if (mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) {
+            return SelectView(
+              subjects: subjects,
+            );
+          },
+        ));
+      }
     } catch (e) {
       String err = '';
       if (e is FirebaseAuthException && e.message != null) {
