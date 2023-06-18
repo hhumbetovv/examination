@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../model/subject.dart';
 import '../select_view.dart';
@@ -36,14 +37,26 @@ abstract class LoginModal extends State<LoginView> {
         email: email,
         password: password,
       );
+      debugPrint(userCredential.user?.email);
       final userSnapshot = await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).get();
-
       final subjectsSnapshot =
           await FirebaseFirestore.instance.collection('subjects').where('id', whereIn: userSnapshot['subjects']).get();
 
       final subjects = subjectsSnapshot.docs.map((doc) {
         return SubjectModel.fromJson(doc.data());
       }).toList();
+      if (userSnapshot['isDynamic']) {
+        debugPrint(userSnapshot['isDynamic'].toString());
+        String newPassword = const Uuid().v1().substring(0, 8);
+        final user = FirebaseAuth.instance.currentUser;
+        await user!.updatePassword(newPassword);
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'password': newPassword,
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password has ben changed')));
+        }
+      }
 
       if (mounted) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
