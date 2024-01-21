@@ -10,7 +10,7 @@ import '../../utils/constants.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/dialogs/select_index_dialog.dart';
-import 'exam_modal.dart';
+import 'exam_model.dart';
 
 class ExamView extends StatefulWidget {
   const ExamView({
@@ -24,7 +24,7 @@ class ExamView extends StatefulWidget {
   State<ExamView> createState() => _ExamViewState();
 }
 
-class _ExamViewState extends ExamModal {
+class _ExamViewState extends ExamModel {
   //? Settings Button
   IconButton get settingsButton {
     return IconButton(

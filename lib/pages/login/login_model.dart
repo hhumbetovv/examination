@@ -7,7 +7,7 @@ import '../../model/subject.dart';
 import '../select_view.dart';
 import 'login_view.dart';
 
-abstract class LoginModal extends State<LoginView> {
+abstract class LoginModel extends State<LoginView> {
   bool isLoading = false;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;

@@ -84,6 +84,7 @@ class AppTheme {
     return ThemeData(
       //! Brightness
       brightness: isDark ? Brightness.dark : Brightness.light,
+      useMaterial3: false,
       //! Color Scheme
       colorScheme: isDark
           ? ColorScheme.dark(

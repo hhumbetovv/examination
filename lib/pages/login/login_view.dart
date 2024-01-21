@@ -1,14 +1,13 @@
-import 'dart:html' as html;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsapp_share2/whatsapp_share2.dart';
 
 import '../../cubits/index_cubit.dart';
 import '../../cubits/theme_mode_cubit.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/text_input.dart';
-import 'login_modal.dart';
+import 'login_model.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({
@@ -19,17 +18,17 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends LoginModal {
+class _LoginViewState extends LoginModel {
   //! Whatsapp Message Button
   IconButton get waMessageButton {
     return IconButton(
       onPressed: () async {
         //! Change this for platforms
-        // await WhatsappShare.share(
-        //   text: 'Oh? Hi there',
-        //   phone: '994503281398',
-        // );
-        html.window.open('https://wa.me/+994503281398', "_blank");
+        await WhatsappShare.share(
+          text: 'Oh? Hi there',
+          phone: '994503281398',
+        );
+        // html.window.open('https://wa.me/+994503281398', "_blank");
       },
       icon: const Icon(Icons.question_answer_outlined),
     );

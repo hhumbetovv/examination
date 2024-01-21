@@ -10,7 +10,7 @@ import '../../utils/constants.dart';
 import '../../widgets/answer_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/dialogs/select_index_dialog.dart';
-import 'learning_modal.dart';
+import 'learning_model.dart';
 
 class LearningView extends StatefulWidget {
   const LearningView({
@@ -24,7 +24,7 @@ class LearningView extends StatefulWidget {
   State<LearningView> createState() => _LearningViewState();
 }
 
-class _LearningViewState extends LearningModal {
+class _LearningViewState extends LearningModel {
   //? Settings Button
   IconButton get settingsButton {
     return IconButton(

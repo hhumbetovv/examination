@@ -4,7 +4,7 @@ import '../../model/question_controller.dart';
 import '../../widgets/dialogs/settings_modal.dart';
 import 'learning_view.dart';
 
-abstract class LearningModal extends State<LearningView> {
+abstract class LearningModel extends State<LearningView> {
   late final QuestionController controller;
   String swipeDirection = 'zero';
 

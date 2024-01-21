@@ -9,7 +9,7 @@ import '../../widgets/dialogs/settings_modal.dart';
 import '../result_view.dart';
 import 'exam_view.dart';
 
-abstract class ExamModal extends State<ExamView> {
+abstract class ExamModel extends State<ExamView> {
   late final QuestionController controller;
   bool isLoading = false;
   final events = [];
